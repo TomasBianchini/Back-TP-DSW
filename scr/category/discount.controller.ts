@@ -1,13 +1,14 @@
 import { Request, Response } from "express";
 import { orm } from "../shared/orm.js";
 import { Discount } from "./discount.entity.js";
+import { validateDiscount } from "./discount.schema.js";
 
 const em = orm.em;
 
 async function findAll(req: Request, res: Response) {
   try {
     const discounts = await em.find(Discount, {}, { populate: ["category"] });
-    res.status(200).json({ message: "Found all discounts", data: discounts});
+    res.status(200).json({ message: "Found all discounts", data: discounts });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -21,8 +22,8 @@ async function findOne(req: Request, res: Response) {
       { id },
       { populate: ["category"] }
     );
-    if(!discount){
-      res.status(404).json({message: "Discount not found"});
+    if (!discount) {
+      res.status(404).json({ message: "Discount not found" });
     }
     res.status(200).json({ message: "Found discount", data: discount });
   } catch (error: any) {
@@ -32,7 +33,10 @@ async function findOne(req: Request, res: Response) {
 
 async function add(req: Request, res: Response) {
   try {
-    //TODO check if discount exists and if discount is valid 
+    const validationResult = validateDiscount(req.body);
+    if (!validationResult.success) {
+      return res.status(400).json({ message: validationResult.error.message });
+    }
     const discount = em.create(Discount, req.body);
     await em.flush();
     res.status(201).json({ message: "disocunt created ", data: discount });

@@ -1,5 +1,11 @@
 import { Router } from "express";
-import { findAll, findOne, add, update, remove } from "./discount.controller.js";
+import {
+  findAll,
+  findOne,
+  add,
+  update,
+  remove,
+} from "./discount.controller.js";
 
 export const discountRouter = Router();
 

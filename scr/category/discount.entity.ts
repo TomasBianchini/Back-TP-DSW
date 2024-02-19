@@ -12,5 +12,4 @@ export class Discount extends BaseEntity {
 
   @ManyToOne(() => Category, { nullable: false })
   category!: Rel<Category>;
-
 }

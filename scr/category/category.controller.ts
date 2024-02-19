@@ -1,6 +1,7 @@
 import { Category } from "./category.entity.js";
 import { Request, Response } from "express";
 import { orm } from "../shared/orm.js";
+import { validateCategory } from "./category.schema.js";
 
 const em = orm.em;
 async function findAll(req: Request, res: Response) {
@@ -16,8 +17,8 @@ async function findOne(req: Request, res: Response) {
   try {
     const id = req.params.id;
     const category = await em.find(Category, { id });
-    if(!category){
-      res.status(404).json({message: "Category not found"});
+    if (!category) {
+      res.status(404).json({ message: "Category not found" });
     }
     res.status(200).json({ message: "Found category", data: category });
   } catch (error: any) {
@@ -27,7 +28,10 @@ async function findOne(req: Request, res: Response) {
 
 async function add(req: Request, res: Response) {
   try {
-    //TODO check if category exists and if category is valid 
+    const validationResult = validateCategory(req.body);
+    if (!validationResult.success) {
+      res.status(400).json({ message: validationResult.error.message });
+    }
     const category = em.create(Category, req.body);
     await em.flush();
     res.status(201).json({ message: "Category created ", data: category });
