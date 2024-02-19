@@ -53,7 +53,7 @@ async function update(req: Request, res: Response) {
     await em.flush();
     res
       .status(201)
-      .json({ message: "discount updated ", data: discountToUpdate });
+      .json({ message: "discount updated", data: discountToUpdate });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
