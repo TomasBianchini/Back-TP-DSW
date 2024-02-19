@@ -62,6 +62,7 @@ async function remove(req: Request, res: Response) {
   try {
     const id = req.params.id;
     const payment_type = em.getReference(PaymentType, id);
+
     await em.removeAndFlush(payment_type);
     res
       .status(201)

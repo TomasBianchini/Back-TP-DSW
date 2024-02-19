@@ -39,7 +39,7 @@ async function add(req: Request, res: Response) {
     }
     const discount = em.create(Discount, req.body);
     await em.flush();
-    res.status(201).json({ message: "disocunt created ", data: discount });
+    res.status(201).json({ message: "disocunt created", data: discount });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }

@@ -1,6 +1,6 @@
 import zod from "zod";
 
-export const categorySchema = zod.object({
+const categorySchema = zod.object({
   category: zod
     .string()
     .min(5, { message: "Category name must be at least 5 characters long" })

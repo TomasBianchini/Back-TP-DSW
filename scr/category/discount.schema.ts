@@ -1,5 +1,4 @@
 import zod from "zod";
-import { categorySchema } from "./category.schema.js";
 
 const discountSchema = zod.object({
   value: zod
@@ -12,7 +11,7 @@ const discountSchema = zod.object({
     .refine((value) => value === "Active" || value === "Archived", {
       message: "State must be either Active or Archived",
     }),
-  category: categorySchema.pick({ category: true }),
+  category: zod.string(),
 });
 
 export function validateDiscount(data: any) {
