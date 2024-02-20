@@ -6,6 +6,7 @@ import {
   update,
   remove,
 } from "./category.controller.js";
+//TODO add auth middleware and check user type in routes
 
 export const categoryRouter = Router();
 

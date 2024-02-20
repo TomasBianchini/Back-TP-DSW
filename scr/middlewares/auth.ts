@@ -16,4 +16,18 @@ async function auth(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export { auth };
+async function isAdmin(req: Request, res: Response, next: NextFunction) {
+  if (req.body.user.type !== "Admin") {
+    return res.status(403).json({ message: "Access denied" });
+  }
+  next();
+}
+
+async function isSeller(req: Request, res: Response, next: NextFunction) {
+  if (req.body.user.type !== "Seller") {
+    return res.status(403).json({ message: "Access denied" });
+  }
+  next();
+}
+
+export { auth, isAdmin, isSeller };

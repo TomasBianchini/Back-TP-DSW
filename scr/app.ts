@@ -7,6 +7,7 @@ import { discountRouter } from "./category/discount.routes.js";
 import { payment_typeRouter } from "./payment_type/payment_type.routes.js";
 import { userRouter } from "./users/user.routes.js";
 import { productRouter } from "./product/product.routes.js";
+import { sellerRouter } from "./users/seller.routes.js";
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use("/category", categoryRouter);
 app.use("/discount", discountRouter);
 app.use("/payment_type", payment_typeRouter);
 app.use("/user", userRouter);
+app.use("/seller", sellerRouter);
 app.use("/product", productRouter);
 
 //luego de los middlewares base
