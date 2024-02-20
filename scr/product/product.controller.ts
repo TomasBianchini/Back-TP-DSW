@@ -1,12 +1,12 @@
 import { orm } from "../shared/db/orm.js";
-import { Product } from "../product/product.entity";
+import { Product } from "../product/product.entity.js";
 import { validateProduct } from "./product.schema.js";
 import { Request, Response } from "express";
 import { ProductFilter } from "./product.filter.js";
 
 const em = orm.em;
 
-async function findAllProducts(req: Request, res: Response) {
+async function findAll(req: Request, res: Response) {
   try {
     const filter: ProductFilter = req.query;
     const products = await em.find(
@@ -79,4 +79,4 @@ async function remove(req: Request, res: Response) {
   }
 }
 
-export { findAllProducts, findOne, add, update, remove };
+export { findAll, findOne, add, update, remove };
