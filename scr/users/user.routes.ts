@@ -1,7 +1,7 @@
 import Router from "express";
 
 import { add, findAll, findOne, remove, update } from "./user.controller.js";
-import { auth } from "../middlewares/auth.js";
+import { auth, isAdmin } from "../middlewares/auth.js";
 //TODO add auth middleware and check user type in routes
 export const userRouter = Router();
 
