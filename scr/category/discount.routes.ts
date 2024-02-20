@@ -6,6 +6,7 @@ import {
   update,
   remove,
 } from "./discount.controller.js";
+//TODO add auth middleware to routes
 
 export const discountRouter = Router();
 
