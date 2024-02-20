@@ -1,4 +1,4 @@
-import { orm } from "../shared/orm.js";
+import { orm } from "../shared/db/orm.js";
 import { PaymentType } from "./payment_type.entity.js";
 import { Request, Response } from "express";
 import { validatePayment_type } from "./payment_type.schema.js";
@@ -7,7 +7,7 @@ const em = orm.em;
 
 async function findAll(req: Request, res: Response) {
   try {
-    const payment_types = await em.find(PaymentType, {});
+    const payment_types = await em.find(PaymentType, { state: "Active" });
     res
       .status(200)
       .json({ message: "Found all payment types", data: payment_types });
@@ -61,11 +61,14 @@ async function update(req: Request, res: Response) {
 async function remove(req: Request, res: Response) {
   try {
     const id = req.params.id;
-    const payment_type = em.getReference(PaymentType, id);
-
-    await em.removeAndFlush(payment_type);
+    const payment_type = await em.findOne(PaymentType, { id });
+    if (!payment_type) {
+      return res.status(404).json({ message: "Payment type not found" });
+    }
+    payment_type.state = "Archived";
+    await em.persistAndFlush(payment_type);
     res
-      .status(201)
+      .status(200)
       .json({ message: "Payment type deleted", data: payment_type });
   } catch (error: any) {
     res.status(500).json({ message: error.message });

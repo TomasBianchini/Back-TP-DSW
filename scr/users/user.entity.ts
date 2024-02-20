@@ -5,28 +5,32 @@ import {
   EventArgs,
   Property,
 } from "@mikro-orm/core";
-import { BaseEntity } from "../shared/baseEntity.entity.js";
+import { BaseEntity } from "../shared/db/baseEntity.entity.js";
 import { hash, verify } from "argon2";
 
 @Entity()
 export class User extends BaseEntity {
   @Property({ nullable: false, unique: true })
   user_name!: string;
+
   @Property({ nullable: false, unique: true })
   email!: string;
+
   @Property({ nullable: false })
   password!: string;
+
   @Property({ nullable: false, unique: true })
   address!: string;
+
   @Property({ nullable: false, unique: true })
   type!: "Admin" | "User" | "Seller";
+
   @Property({ nullable: false })
   state!: "Active" | "Archived";
 
   @BeforeCreate()
   @BeforeUpdate()
   async hashPassword(args: EventArgs<User>) {
-    // hash only if the password was changed
     const password = args.changeSet?.payload.password;
     if (password) {
       this.password = await hash(password);

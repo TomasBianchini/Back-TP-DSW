@@ -1,13 +1,14 @@
 import { Response, Request } from "express";
-import { orm } from "../shared/orm.js";
+import { orm } from "../shared/db/orm.js";
 import { User } from "./user.entity.js";
 import { validateUser } from "./user.schema.js";
-
+import { UserFilter } from "./user.filter.js";
 const em = orm.em;
 
 async function findAll(req: Request, res: Response) {
   try {
-    const users = await em.find(User, {});
+    const filter: UserFilter = req.query;
+    const users = await em.find(User, filter);
     res.status(200).json({ message: "Found all users", data: users });
   } catch (error: any) {
     res.status(500).json({ message: error.message });

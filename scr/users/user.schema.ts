@@ -12,6 +12,9 @@ const userSchema = zod.object({
     .refine((value) => value === "Active" || value === "Archived", {
       message: "State must be either Active or Archived",
     }),
+  cbu: zod.string().optional(),
+  shop_name: zod.string().optional(),
+  cuil: zod.string().optional(),
 });
 
 export function validateUser(data: any) {

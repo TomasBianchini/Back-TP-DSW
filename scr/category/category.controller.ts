@@ -1,12 +1,12 @@
 import { Category } from "./category.entity.js";
 import { Request, Response } from "express";
-import { orm } from "../shared/orm.js";
+import { orm } from "../shared/db/orm.js";
 import { validateCategory } from "./category.schema.js";
 
 const em = orm.em;
 async function findAll(req: Request, res: Response) {
   try {
-    const categories = await em.find(Category, {});
+    const categories = await em.find(Category, { state: "Active" });
     res.status(200).json({ message: "Found all categories", data: categories });
   } catch (error: any) {
     res.status(500).json({ message: error.message });

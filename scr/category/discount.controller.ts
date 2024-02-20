@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { orm } from "../shared/orm.js";
+import { orm } from "../shared/db/orm.js";
 import { Discount } from "./discount.entity.js";
 import { validateDiscount } from "./discount.schema.js";
 
@@ -7,7 +7,11 @@ const em = orm.em;
 
 async function findAll(req: Request, res: Response) {
   try {
-    const discounts = await em.find(Discount, {}, { populate: ["category"] });
+    const discounts = await em.find(
+      Discount,
+      { state: "Active" },
+      { populate: ["category"] }
+    );
     res.status(200).json({ message: "Found all discounts", data: discounts });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -59,9 +63,15 @@ async function update(req: Request, res: Response) {
 async function remove(req: Request, res: Response) {
   try {
     const id = req.params.id;
-    const discount = em.getReference(Discount, id);
-    await em.removeAndFlush(discount);
-    res.status(201).json({ message: "discount deleted", data: discount });
+    const discountToRemove = await em.findOne(Discount, { id });
+    if (!discountToRemove) {
+      return res.status(404).json({ message: "Discount not found" });
+    }
+    discountToRemove.state = "Archived";
+    await em.persistAndFlush(discountToRemove);
+    res
+      .status(201)
+      .json({ message: "discount deleted", data: discountToRemove });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
