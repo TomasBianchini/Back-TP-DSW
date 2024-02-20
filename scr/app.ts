@@ -9,6 +9,7 @@ import { userRouter } from "./users/user.routes.js";
 import { productRouter } from "./product/product.routes.js";
 import { sellerRouter } from "./users/seller.routes.js";
 import { loginRouter } from "./users/login.routes.js";
+import { reviewRouter } from "./product/review.routes.js";
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use("/user", userRouter);
 app.use("/seller", sellerRouter);
 app.use("/product", productRouter);
 app.use("/login", loginRouter);
+app.use("/review", reviewRouter);
 
 //luego de los middlewares base
 app.use((req, res, next) => {

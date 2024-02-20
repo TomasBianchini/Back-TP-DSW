@@ -6,6 +6,7 @@ import { auth, isAdmin } from "../middlewares/auth.js";
 export const userRouter = Router();
 
 userRouter.get("/", findAll);
+//TODO fix this route
 userRouter.get("/:id", findOne);
 userRouter.post("/", add);
 userRouter.delete("/:id", remove);

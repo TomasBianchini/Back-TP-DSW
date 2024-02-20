@@ -1,6 +1,8 @@
+import { NextFunction, Request, Response } from "express";
 import OpenAI from "openai";
 
-async function isAppropriate(productReview: string) {
+async function isAppropriate(req: Request, res: Response, next: NextFunction) {
+  const review = req.body.comment;
   const openai = new OpenAI({
     apiKey: process.env.api_key,
     organization: process.env.organization_id,
@@ -13,10 +15,13 @@ async function isAppropriate(productReview: string) {
         content:
           "Rate the following product review as true if it contains no swear words and as false if it contains swear words.",
       },
-      { role: "user", content: productReview },
+      { role: "user", content: review },
     ],
   });
-  return response.choices[0].message.content?.toLowerCase() ?? "false";
+  if (response.choices[0].message.content?.toLowerCase() === "false") {
+    return res.status(400).send({ message: "Inappropriate language detected" });
+  }
+  next();
 }
 
 export { isAppropriate };
