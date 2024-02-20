@@ -16,10 +16,7 @@ async function findAll(req: Request, res: Response) {
 async function findOne(req: Request, res: Response) {
   try {
     const id = req.params.id;
-    const category = await em.find(Category, { id });
-    if (!category) {
-      res.status(404).json({ message: "Category not found" });
-    }
+    const category = await em.findOneOrFail(Category, { id });
     res.status(200).json({ message: "Found category", data: category });
   } catch (error: any) {
     res.status(500).json({ message: error.message });

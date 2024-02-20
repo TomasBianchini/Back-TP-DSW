@@ -22,9 +22,6 @@ async function findOne(req: Request, res: Response) {
       { id },
       { populate: ["category"] }
     );
-    if (!discount) {
-      res.status(404).json({ message: "Discount not found" });
-    }
     res.status(200).json({ message: "Found discount", data: discount });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -33,6 +30,7 @@ async function findOne(req: Request, res: Response) {
 
 async function add(req: Request, res: Response) {
   try {
+    //TODO here it's necessary to validate if there is a active discount for the same category
     const validationResult = validateDiscount(req.body);
     if (!validationResult.success) {
       return res.status(400).json({ message: validationResult.error.message });
