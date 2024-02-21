@@ -39,7 +39,7 @@ async function add(req: Request, res: Response) {
     if (!validationResult.success) {
       return res.status(400).json({ message: validationResult.error.message });
     }
-    const discount = em.create(Discount, req.body);
+    const discount = em.create(Discount, validationResult.data);
     await em.flush();
     res.status(201).json({ message: "disocunt created", data: discount });
   } catch (error: any) {

@@ -37,10 +37,9 @@ async function add(req: Request, res: Response) {
   try {
     const validationResult = validateReview(req.body);
     if (!validationResult.success) {
-      res.status(400).json({ message: validationResult.error.message });
-      return;
+      return res.status(400).json({ message: validationResult.error.message });
     }
-    const review = await em.create(Review, req.body);
+    const review = await em.create(Review, validationResult.data);
     await em.flush();
     res.status(201).json({ message: "Review added", data: review });
   } catch (error: any) {

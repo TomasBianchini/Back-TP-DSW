@@ -31,11 +31,11 @@ async function findOne(req: Request, res: Response) {
 
 async function add(req: Request, res: Response) {
   try {
-    const validateResult = validatePayment_type(req.body);
-    if (!validateResult.success) {
-      return res.status(400).json({ message: validateResult.error.message });
+    const validationResult = validatePayment_type(req.body);
+    if (!validationResult.success) {
+      return res.status(400).json({ message: validationResult.error.message });
     }
-    const payment_type = em.create(PaymentType, req.body);
+    const payment_type = em.create(PaymentType, validationResult.data);
     await em.flush();
     res
       .status(201)

@@ -27,9 +27,9 @@ async function add(req: Request, res: Response) {
   try {
     const validationResult = validateCategory(req.body);
     if (!validationResult.success) {
-      res.status(400).json({ message: validationResult.error.message });
+      return res.status(400).json({ message: validationResult.error.message });
     }
-    const category = em.create(Category, req.body);
+    const category = em.create(Category, validationResult.data);
     await em.flush();
     res.status(201).json({ message: "Category created ", data: category });
   } catch (error: any) {

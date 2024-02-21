@@ -44,7 +44,7 @@ async function add(req: Request, res: Response) {
     if (!validationResult.success) {
       return res.status(400).json({ message: validationResult.error.message });
     }
-    const product = em.create(Product, req.body);
+    const product = em.create(Product, validationResult.data);
     await em.flush();
     res.status(201).json({ message: "Product created", data: product });
   } catch (error: any) {

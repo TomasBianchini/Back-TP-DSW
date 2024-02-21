@@ -17,7 +17,7 @@ export class Product extends BaseEntity {
   description!: string;
 
   @Property({ nullable: false })
-  img_url!: "Active" | "Archived";
+  img_url!: string;
 
   @Property({ nullable: false })
   state!: "Active" | "Archived";
