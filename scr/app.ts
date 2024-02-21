@@ -2,6 +2,7 @@ import "reflect-metadata";
 import express from "express";
 import { orm, syncSchema } from "./shared/db/orm.js";
 import { RequestContext } from "@mikro-orm/core";
+import cors from "cors";
 import { categoryRouter } from "./category/category.routes.js";
 import { discountRouter } from "./category/discount.routes.js";
 import { payment_typeRouter } from "./payment_type/payment_type.routes.js";
@@ -12,7 +13,7 @@ import { loginRouter } from "./users/login.routes.js";
 import { reviewRouter } from "./product/review.routes.js";
 
 const app = express();
-
+app.use(cors());
 app.use(express.json());
 
 app.use("/category", categoryRouter);
