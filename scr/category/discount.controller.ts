@@ -2,16 +2,17 @@ import { Request, Response } from "express";
 import { orm } from "../shared/db/orm.js";
 import { Discount } from "./discount.entity.js";
 import { validateDiscount } from "./discount.schema.js";
+import { DiscountFilter } from "./discount.filter.js";
 
 const em = orm.em;
 
 async function findAll(req: Request, res: Response) {
   try {
-    const discounts = await em.find(
-      Discount,
-      { state: "Active" },
-      { populate: ["category"] }
-    );
+    //TODO add filters to the query
+    const filter: DiscountFilter = req.query;
+    const discounts = await em.find(Discount, filter, {
+      populate: ["category"],
+    });
     res.status(200).json({ message: "Found all discounts", data: discounts });
   } catch (error: any) {
     res.status(500).json({ message: error.message });

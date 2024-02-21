@@ -6,7 +6,11 @@ import { validateCategory } from "./category.schema.js";
 const em = orm.em;
 async function findAll(req: Request, res: Response) {
   try {
-    const categories = await em.find(Category, { state: "Active" });
+    const categories = await em.find(
+      Category,
+      { state: "Active" },
+      { populate: ["discounts"] }
+    );
     res.status(200).json({ message: "Found all categories", data: categories });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
