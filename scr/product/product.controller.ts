@@ -3,6 +3,8 @@ import { Product } from "../product/product.entity.js";
 import { validateProduct } from "./product.schema.js";
 import { Request, Response } from "express";
 import { ProductFilter } from "./product.filter.js";
+import { Discount } from "../category/discount.entity.js";
+import { json } from "stream/consumers";
 
 const em = orm.em;
 
@@ -10,11 +12,16 @@ async function findAll(req: Request, res: Response) {
   try {
     const filter: ProductFilter = req.query;
     const products = await em.find(Product, filter, {
-      populate: ["category", "seller", "reviews"],
+      //TODO fix the populate because it returns category with discounts and that's discounts with category
+      populate: ["category", "seller", "reviews", "category.discounts"],
+    });
+    let filteredProducts = await filterData(products);
+    filteredProducts.map((product2) => {
+      console.log(product2.category.discounts);
     });
     return res
       .status(200)
-      .json({ message: "Found all products", data: products });
+      .json({ message: "Found all products", data: filteredProducts });
   } catch (error: any) {
     return res.status(500).json({ message: error.message });
   }
@@ -26,8 +33,9 @@ async function findOne(req: Request, res: Response) {
     const product = await em.findOneOrFail(
       Product,
       { id },
-      { populate: ["category", "seller", "reviews"] }
+      { populate: ["category", "category.discounts", "seller", "reviews"] }
     );
+    let filteredProducts = await filterData([product]);
     res.status(200).json({ message: "Found product", data: product });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -36,6 +44,7 @@ async function findOne(req: Request, res: Response) {
 
 async function add(req: Request, res: Response) {
   try {
+    //TODO check if the category and seller exist
     const validationResult = validateProduct(req.body);
     if (!validationResult.success) {
       return res.status(400).json({ message: validationResult.error.message });
@@ -73,6 +82,19 @@ async function remove(req: Request, res: Response) {
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
+}
+
+async function filterData(products: Product[]) {
+  const filteredProducts = products.map((product) => {
+    const filteredDiscounts = product.category.discounts.filter(
+      (discount) => discount.state === "Active"
+    );
+    return {
+      ...product,
+      category: { ...product.category, discounts: filteredDiscounts },
+    };
+  });
+  return filteredProducts;
 }
 
 export { findAll, findOne, add, update, remove };

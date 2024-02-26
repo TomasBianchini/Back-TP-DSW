@@ -11,7 +11,7 @@ import { auth } from "../middlewares/auth.js";
 
 export const categoryRouter = Router();
 
-categoryRouter.get("/", auth, findAll);
+categoryRouter.get("/", findAll);
 categoryRouter.get("/:id", findOne);
 categoryRouter.post("/", add);
 categoryRouter.put("/:id", update);
