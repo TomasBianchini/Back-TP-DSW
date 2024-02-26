@@ -35,10 +35,18 @@ async function findOne(req: Request, res: Response) {
 
 async function add(req: Request, res: Response) {
   try {
-    //TODO here it's necessary to validate if there is a active discount for the same category
     const validationResult = validateDiscount(req.body);
     if (!validationResult.success) {
       return res.status(400).json({ message: validationResult.error.message });
+    }
+    const valideDiscount = await em.findOne(Discount, {
+      category: validationResult.data.category,
+      state: "Active",
+    });
+    if (valideDiscount) {
+      return res.status(400).json({
+        message: "There is already an acitve discount for this category",
+      });
     }
     const discount = em.create(Discount, validationResult.data);
     await em.flush();
