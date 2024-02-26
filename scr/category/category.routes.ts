@@ -6,11 +6,12 @@ import {
   update,
   remove,
 } from "./category.controller.js";
+import { auth } from "../middlewares/auth.js";
 //TODO add auth middleware and check user type in routes
 
 export const categoryRouter = Router();
 
-categoryRouter.get("/", findAll);
+categoryRouter.get("/", auth, findAll);
 categoryRouter.get("/:id", findOne);
 categoryRouter.post("/", add);
 categoryRouter.put("/:id", update);

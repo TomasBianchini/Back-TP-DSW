@@ -9,12 +9,9 @@ const em = orm.em;
 async function findAll(req: Request, res: Response) {
   try {
     const filter: ProductFilter = req.query;
-    const products = await em.find(
-      Product,
-      filter,
-      { populate: ["category", "seller"] }
-      //TODO: add reviews
-    );
+    const products = await em.find(Product, filter, {
+      populate: ["category", "seller", "reviews"],
+    });
     return res
       .status(200)
       .json({ message: "Found all products", data: products });
@@ -29,8 +26,7 @@ async function findOne(req: Request, res: Response) {
     const product = await em.findOneOrFail(
       Product,
       { id },
-      { populate: ["category", "seller"] }
-      //TODO: add reviews
+      { populate: ["category", "seller", "reviews"] }
     );
     res.status(200).json({ message: "Found product", data: product });
   } catch (error: any) {

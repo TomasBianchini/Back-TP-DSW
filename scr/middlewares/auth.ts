@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from "express";
 
 const key: string | undefined = process.env.secret_key;
 async function auth(req: Request, res: Response, next: NextFunction) {
-  const token = req.header("x-access-token");
+  const token = req.header("Authorization");
   if (!token) {
     return res.status(403).json({ message: "No token provided" });
   }

@@ -12,11 +12,18 @@ const userSchema = zod.object({
     .refine((value) => value === "Active" || value === "Archived", {
       message: "State must be either Active or Archived",
     }),
-  cbu: zod.string().optional(),
-  shop_name: zod.string().optional(),
-  cuil: zod.string().optional(),
+});
+
+const sellerSchema = userSchema.extend({
+  shop_name: zod.string(),
+  cuil: zod.string(),
+  cbu: zod.string(),
 });
 
 export function validateUser(data: any) {
   return userSchema.safeParse(data);
+}
+
+export function validateSeller(data: any) {
+  return sellerSchema.safeParse(data);
 }

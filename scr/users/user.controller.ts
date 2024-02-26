@@ -1,8 +1,9 @@
 import { Response, Request } from "express";
 import { orm } from "../shared/db/orm.js";
 import { User } from "./user.entity.js";
-import { validateUser } from "./user.schema.js";
+import { validateSeller, validateUser } from "./user.schema.js";
 import { UserFilter } from "./user.filter.js";
+import { Seller } from "./seller.entity.js";
 const em = orm.em;
 
 async function findAll(req: Request, res: Response) {
@@ -26,11 +27,25 @@ async function findOne(req: Request, res: Response) {
 }
 async function add(req: Request, res: Response) {
   try {
-    const validationResult = validateUser(req.body);
-    if (!validationResult.success) {
-      return res.status(400).json({ message: validationResult.error.message });
+    let validationResult: any;
+    let user: any;
+    if (req.body.type === "User") {
+      validationResult = validateUser(req.body);
+      if (!validationResult.success) {
+        return res
+          .status(400)
+          .json({ message: validationResult.error.message });
+      }
+      user = em.create(User, validationResult.data);
+    } else if (req.body.type === "Seller") {
+      validationResult = validateSeller(req.body);
+      if (!validationResult.success) {
+        return res
+          .status(400)
+          .json({ message: validationResult.error.message });
+      }
+      user = em.create(Seller, validationResult.data);
     }
-    const user = em.create(User, validationResult.data);
     await em.flush();
     res.status(201).json({ message: "User created", data: user });
   } catch (error: any) {
