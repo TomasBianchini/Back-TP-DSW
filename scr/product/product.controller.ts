@@ -3,8 +3,7 @@ import { Product } from "../product/product.entity.js";
 import { validateProduct } from "./product.schema.js";
 import { Request, Response } from "express";
 import { ProductFilter } from "./product.filter.js";
-import { Discount } from "../category/discount.entity.js";
-import { json } from "stream/consumers";
+import { Seller } from "../users/seller.entity.js";
 
 const em = orm.em;
 
@@ -16,9 +15,6 @@ async function findAll(req: Request, res: Response) {
       populate: ["category", "seller", "reviews", "category.discounts"],
     });
     let filteredProducts = await filterData(products);
-    filteredProducts.map((product2) => {
-      console.log(product2.category.discounts);
-    });
     return res
       .status(200)
       .json({ message: "Found all products", data: filteredProducts });
@@ -33,10 +29,13 @@ async function findOne(req: Request, res: Response) {
     const product = await em.findOneOrFail(
       Product,
       { id },
-      { populate: ["category", "category.discounts", "seller", "reviews"] }
+      { populate: ["category", "seller", "reviews", "category.discounts"] }
     );
-    let filteredProducts = await filterData([product]);
-    res.status(200).json({ message: "Found product", data: product });
+
+    let filteredProduct = await filterData([product]);
+    res
+      .status(200)
+      .json({ message: "Found product", data: filteredProduct[0] });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -44,10 +43,14 @@ async function findOne(req: Request, res: Response) {
 
 async function add(req: Request, res: Response) {
   try {
-    //TODO check if the category and seller exist
     const validationResult = validateProduct(req.body);
     if (!validationResult.success) {
       return res.status(400).json({ message: validationResult.error.message });
+    }
+    const id = validationResult.data.seller;
+    const seller = await em.findOne(Seller, { id });
+    if (!seller) {
+      return res.status(404).json({ message: "Seller not found" });
     }
     const product = em.create(Product, validationResult.data);
     await em.flush();
@@ -94,6 +97,7 @@ async function filterData(products: Product[]) {
       category: { ...product.category, discounts: filteredDiscounts },
     };
   });
+  //TODO remove category from discounts
   return filteredProducts;
 }
 

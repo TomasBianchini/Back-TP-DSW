@@ -19,7 +19,7 @@ async function findAll(req: Request, res: Response) {
 async function findOne(req: Request, res: Response) {
   try {
     const id = req.params.id;
-    const user = em.findOneOrFail(User, { id });
+    const user = await em.findOneOrFail(User, { id });
     res.status(200).json({ message: "Found user", data: user });
   } catch (error: any) {
     res.status(500).json({ message: error.message });

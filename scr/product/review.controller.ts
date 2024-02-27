@@ -2,18 +2,17 @@ import { Request, Response } from "express";
 import { Review } from "./review.entity.js";
 import { validateReview } from "./review.schema.js";
 import { orm } from "../shared/db/orm.js";
-import { populate } from "dotenv";
 
 const em = orm.em;
 
 async function findAll(req: Request, res: Response) {
   try {
-    const review = em.find(
+    const reviews = await em.find(
       Review,
       { state: "Active" },
       { populate: ["product"] }
     );
-    res.status(200).json({ message: "Found all reviews", data: review });
+    res.status(200).json({ message: "Found all reviews", data: reviews });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
