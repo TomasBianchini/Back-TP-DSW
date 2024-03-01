@@ -1,15 +1,16 @@
 import { Response, Request } from "express";
 import { orm } from "../shared/db/orm.js";
 import { User } from "./user.entity.js";
-import { validateUser } from "./user.schema.js";
+import { validateSeller, validateUser } from "./user.schema.js";
 import { UserFilter } from "./user.filter.js";
+import { Seller } from "./seller.entity.js";
 const em = orm.em;
 
 async function findAll(req: Request, res: Response) {
   try {
     const filter: UserFilter = req.query;
-    const users = await em.find(User, filter);
-    res.status(200).json({ message: "Found all users", data: users });
+    const sellers = await em.find(Seller, filter);
+    res.status(200).json({ message: "Found all sellers", data: sellers });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -18,21 +19,21 @@ async function findAll(req: Request, res: Response) {
 async function findOne(req: Request, res: Response) {
   try {
     const id = req.params.id;
-    const user = await em.findOneOrFail(User, { id });
-    res.status(200).json({ message: "Found user", data: user });
+    const seller = await em.findOneOrFail(Seller, { id });
+    res.status(200).json({ message: "Found seller", data: seller });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
 }
 async function add(req: Request, res: Response) {
   try {
-    const validationResult = validateUser(req.body);
+    const validationResult = validateSeller(req.body);
     if (!validationResult.success) {
       return res.status(400).json({ message: validationResult.error.message });
     }
-    const user = em.create(User, validationResult.data);
+    const seller = em.create(Seller, validationResult.data);
     await em.flush();
-    res.status(201).json({ message: "User created", data: user });
+    res.status(201).json({ message: "Seller created", data: seller });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -41,13 +42,13 @@ async function add(req: Request, res: Response) {
 async function remove(req: Request, res: Response) {
   try {
     const id = req.params.id;
-    const user = await em.findOne(User, { id });
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+    const seller = await em.findOne(Seller, { id });
+    if (!seller) {
+      return res.status(404).json({ message: "Seller not found" });
     }
-    user.state = "Archived";
-    await em.persistAndFlush(user);
-    res.status(200).json({ message: "User removed" });
+    seller.state = "Archived";
+    await em.persistAndFlush(seller);
+    res.status(200).json({ message: "seller removed" });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -56,10 +57,10 @@ async function remove(req: Request, res: Response) {
 async function update(req: Request, res: Response) {
   try {
     const id = req.params.id;
-    const userToUpdate = await em.findOneOrFail(User, { id });
-    em.assign(userToUpdate, req.body);
+    const sellerToUpdate = await em.findOneOrFail(Seller, { id });
+    em.assign(sellerToUpdate, req.body);
     await em.flush();
-    res.status(201).json({ message: "User updated", data: userToUpdate });
+    res.status(201).json({ message: "Seller updated", data: sellerToUpdate });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
