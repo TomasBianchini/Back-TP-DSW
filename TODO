@@ -1,6 +1,6 @@
 // TODO:
 // - [ check if there is an active discount for the category] Task 1
 // - [ add filter product to product controller to collect active discount and to collect product of particulary category ] Task 2
-// - [ ] Task 3
+// - [ ADD middlewares to routes] Task 3
 // - [ ] Task 4
 // - [ ] Task 5

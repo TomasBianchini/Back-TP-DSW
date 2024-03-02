@@ -15,9 +15,6 @@ import { Order } from "./order.entity.js";
 @Entity()
 export class Cart extends BaseEntity {
   @Property({ nullable: false })
-  quantity!: number;
-
-  @Property({ nullable: false })
   state!: "Complete" | "Pending" | "Canceled";
 
   @ManyToOne(() => User, { nullable: false })
