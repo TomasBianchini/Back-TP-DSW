@@ -11,6 +11,8 @@ import { productRouter } from "./product/product.routes.js";
 import { sellerRouter } from "./users/seller.routes.js";
 import { loginRouter } from "./users/login.routes.js";
 import { reviewRouter } from "./product/review.routes.js";
+import { orderRouter } from "./cart/order.routes.js";
+import { cartRouter } from "./cart/cart.routes.js";
 
 const app = express();
 app.use(cors());
@@ -24,6 +26,8 @@ app.use("/seller", sellerRouter);
 app.use("/product", productRouter);
 app.use("/login", loginRouter);
 app.use("/review", reviewRouter);
+app.use("/order", orderRouter);
+app.use("/cart", cartRouter);
 
 //luego de los middlewares base
 app.use((req, res, next) => {

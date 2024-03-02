@@ -19,4 +19,15 @@ export class Cart extends BaseEntity {
 
   @ManyToOne(() => User, { nullable: false })
   user!: User;
+
+  @OneToMany(() => Order, (order) => order.cart, {
+    cascade: [Cascade.ALL],
+  })
+  orders = new Collection<Order>(this);
+
+  @Property({ nullable: false })
+  total!: number;
+
+  @Property({ nullable: false })
+  shipmethod!: "Standard" | "Express" | "Next Day" | "Pickup";
 }

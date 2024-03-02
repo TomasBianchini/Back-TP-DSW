@@ -2,17 +2,15 @@ import { Response, Request } from "express";
 import { orm } from "../shared/db/orm.js";
 import { Order } from "./order.entity.js";
 import { validateOrder } from "./order.schema.js";
+import { Product } from "../product/product.entity.js";
+import { User } from "../users/user.entity.js";
+import { Cart } from "./cart.entity.js";
 
 const em = orm.em;
 
 async function findAll(req: Request, res: Response) {
   try {
-    const id = req.body.cart.id;
-    const orders = await em.find(
-      Order,
-      { id },
-      { populate: ["product", "cart"] }
-    );
+    const orders = await em.find(Order, {}, { populate: ["product"] });
     res.status(200).json({ message: "Found all orders", data: orders });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -25,7 +23,7 @@ async function findOne(req: Request, res: Response) {
     const order = await em.findOneOrFail(
       Order,
       { id },
-      { populate: ["product", "cart"] }
+      { populate: ["product"] }
     );
     res.status(200).json({ message: "Found order", data: order });
   } catch (error: any) {
@@ -35,13 +33,42 @@ async function findOne(req: Request, res: Response) {
 
 async function add(req: Request, res: Response) {
   try {
-    //TODO add validation for the product and user, verify that the product is active and it has stock
-    // and the user exists, and update the stock of the product
     const validationResult = validateOrder(req.body);
     if (!validationResult.success) {
       return res.status(400).json({ message: validationResult.error.message });
     }
-    const order = em.create(Order, req.body);
+    const product = await em.findOne(Product, validationResult.data.product);
+    if (
+      !product ||
+      product.state === "Archived" ||
+      product.stock < validationResult.data.quantity
+    ) {
+      return res.status(400).json({ message: "Product not available" });
+    }
+    // const user = await em.findOne(User, validationResult.data.cart.user);
+    //TODO add validation if the user has a pending cart or not, if he has a pending cart, add the order to that cart
+    let cart = await em.findOne(Cart, {
+      user: req.body.user,
+      state: "Pending",
+    });
+    if (!cart) {
+      cart = em.create(Cart, {
+        user: req.body.user,
+        state: "Pending",
+        total: req.body.subtotal,
+        shipmethod: "Standard",
+      });
+    }
+    validationResult.data.cart = cart.id;
+    //TODO I think this should be done in cart controller when the cart is completed
+    // product.stock -= validationResult.data.quantity;
+    // em.persist(product);
+    const order = em.create(Order, {
+      quantity: validationResult.data.quantity,
+      product: product,
+      cart: cart,
+      subtotal: validationResult.data.subtotal,
+    });
     await em.flush();
     res.status(201).json({ message: "Order created", data: order });
   } catch (error: any) {
