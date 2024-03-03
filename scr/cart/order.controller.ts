@@ -69,6 +69,8 @@ async function add(req: Request, res: Response) {
       cart: cart,
       subtotal: validationResult.data.subtotal,
     });
+    cart.total += order.subtotal;
+    em.persist(cart);
     await em.flush();
     res.status(201).json({ message: "Order created", data: order });
   } catch (error: any) {
