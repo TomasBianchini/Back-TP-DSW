@@ -20,9 +20,6 @@ async function findOne(req: Request, res: Response) {
   try {
     const id = req.params.id;
     const payment_type = await em.findOneOrFail(PaymentType, { id });
-    if (!payment_type) {
-      res.status(404).json({ message: "Payment type not found" });
-    }
     res.status(200).json({ message: "Found payment type", data: payment_type });
   } catch (error: any) {
     res.status(500).json({ message: error.message });

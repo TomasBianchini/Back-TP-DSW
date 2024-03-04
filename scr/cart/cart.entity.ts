@@ -11,6 +11,8 @@ import { BaseEntity } from "../shared/db/baseEntity.entity.js";
 
 import { User } from "../users/user.entity.js";
 import { Order } from "./order.entity.js";
+import { PaymentType } from "../payment_type/payment_type.entity.js";
+import { Shipping } from "../shipping/shipping.entity.js";
 
 @Entity()
 export class Cart extends BaseEntity {
@@ -28,6 +30,9 @@ export class Cart extends BaseEntity {
   @Property({ nullable: false })
   total!: number;
 
-  @Property({ nullable: false })
-  shipmethod!: "Standard" | "Express" | "Next Day" | "Pickup";
+  @ManyToOne(() => PaymentType, { nullable: true })
+  payment_type!: PaymentType | null;
+
+  @ManyToOne(() => Shipping, { nullable: true })
+  shipping!: Shipping | null;
 }

@@ -13,6 +13,7 @@ import { loginRouter } from "./users/login.routes.js";
 import { reviewRouter } from "./product/review.routes.js";
 import { orderRouter } from "./cart/order.routes.js";
 import { cartRouter } from "./cart/cart.routes.js";
+import { shippingRouter } from "./shipping/shipping.routes.js";
 
 const app = express();
 app.use(cors());
@@ -28,6 +29,7 @@ app.use("/login", loginRouter);
 app.use("/review", reviewRouter);
 app.use("/order", orderRouter);
 app.use("/cart", cartRouter);
+app.use("/shipping", shippingRouter);
 
 //luego de los middlewares base
 app.use((req, res, next) => {

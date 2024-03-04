@@ -12,21 +12,8 @@ const cartSchema = zod.object({
       { message: "State must be either Complete, Pending or Canceled" }
     ),
   total: zod.number().min(0, { message: "Total must be a positive number" }),
-  shipmethod: zod
-    .enum(["Standard", "Express", "Next Day", "Pickup"])
-    .optional()
-    .default("Standard")
-    .refine(
-      (value) =>
-        value === "Standard" ||
-        value === "Express" ||
-        value === "Next Day" ||
-        value === "Pickup",
-      {
-        message:
-          "Shipmethod must be either Standard, Express, Next Day or Pickup",
-      }
-    ),
+  shipmethod: zod.string().optional(),
+  payment_type: zod.string().optional(),
 });
 
 export function validateCart(data: any) {

@@ -51,12 +51,12 @@ async function add(req: Request, res: Response) {
       user: req.body.user,
       state: "Pending",
     });
+
     if (!cart) {
       cart = em.create(Cart, {
         user: req.body.user,
         state: "Pending",
         total: req.body.subtotal,
-        shipmethod: "Standard",
       });
     }
     validationResult.data.cart = cart.id;
