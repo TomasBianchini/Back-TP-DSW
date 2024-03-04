@@ -3,7 +3,6 @@ import { orm } from "../shared/db/orm.js";
 import { Order } from "./order.entity.js";
 import { validateOrder } from "./order.schema.js";
 import { Product } from "../product/product.entity.js";
-import { User } from "../users/user.entity.js";
 import { Cart } from "./cart.entity.js";
 
 const em = orm.em;
@@ -60,9 +59,6 @@ async function add(req: Request, res: Response) {
       });
     }
     validationResult.data.cart = cart.id;
-    //TODO I think this should be done in cart controller when the cart is completed
-    // product.stock -= validationResult.data.quantity;
-    // em.persist(product);
     const order = em.create(Order, {
       quantity: validationResult.data.quantity,
       product: product,
