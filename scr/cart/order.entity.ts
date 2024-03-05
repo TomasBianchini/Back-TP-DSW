@@ -12,7 +12,7 @@ export class Order extends BaseEntity {
   quantity!: number;
 
   @ManyToOne(() => Product, { nullable: false })
-  product!: Product;
+  product!: Product | string;
 
   @Property({ nullable: false })
   subtotal!: number;

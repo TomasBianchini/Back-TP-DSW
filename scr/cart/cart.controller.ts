@@ -5,6 +5,7 @@ import { Cart } from "./cart.entity.js";
 import { CartFilter } from "./cart.filter.js";
 import { Order } from "./order.entity.js";
 import { Product } from "../product/product.entity.js";
+import { validateOrder } from "./order.schema.js";
 
 const em = orm.em;
 
@@ -38,31 +39,41 @@ async function add(req: Request, res: Response) {
   try {
     const cart = em.create(Cart, req.body);
     await em.flush();
-    res.status(201).json({ message: "C created", data: cart });
+    res.status(201).json({ message: "Cart created", data: cart });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
 }
 async function update(req: Request, res: Response) {
   try {
-    //TODO I must check the method to update the orders because it does not work
     const cart: Cart = req.body;
     const ordersArray = Array.from(cart.orders);
-    ordersArray.forEach(async (order: Order) => {
-      const orderToUpdate = await em.findOneOrFail(Order, { id: order.id });
-      em.assign(orderToUpdate, order);
-      const product = await em.findOneOrFail(Product, { id: order.product.id });
-      if (product.stock < order.quantity) {
-        return res.status(400).json({ message: "Product not available" });
-      }
-      product.stock = product.stock - order.quantity;
-      em.persist(product);
-      await em.flush();
-    });
+    const updatePromises = await Promise.all(
+      ordersArray.map(async (order: Order) => {
+        const validationResult = validateOrder(order);
+        if (!validationResult.success) {
+          throw new Error(validationResult.error.message);
+        }
+        const orderToUpdate = await em.findOneOrFail(Order, { id: order.id });
+        em.assign(orderToUpdate, order);
+        await em.flush();
+        const id: string = validationResult.data.product;
+        let productToUpdate = await em.findOneOrFail(Product, {
+          id,
+          state: "Active",
+        });
+        if (productToUpdate.stock < order.quantity) {
+          throw new Error("Product not available");
+        }
+        productToUpdate.stock -= order.quantity;
+        await em.persistAndFlush(productToUpdate);
+      })
+    );
     const id = req.params.id;
     const cartToUpdate = await em.findOneOrFail(Cart, { id });
     em.assign(cartToUpdate, req.body);
     await em.flush();
+
     res.status(200).json({ message: "Order updated", data: cartToUpdate });
   } catch (error: any) {
     res.status(500).json({ message: error.message });

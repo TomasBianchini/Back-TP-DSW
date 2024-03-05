@@ -8,7 +8,6 @@ const em = orm.em;
 
 async function findAll(req: Request, res: Response) {
   try {
-    //TODO add filters to the query
     const filter: DiscountFilter = req.query;
     const discounts = await em.find(Discount, filter, {
       populate: ["category"],

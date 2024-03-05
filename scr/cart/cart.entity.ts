@@ -17,7 +17,7 @@ import { Shipping } from "../shipping/shipping.entity.js";
 @Entity()
 export class Cart extends BaseEntity {
   @Property({ nullable: false })
-  state!: "Complete" | "Pending" | "Canceled";
+  state!: "Completed" | "Pending" | "Canceled";
 
   @ManyToOne(() => User, { nullable: false })
   user!: User;

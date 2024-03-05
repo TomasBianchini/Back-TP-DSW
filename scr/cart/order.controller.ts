@@ -44,8 +44,6 @@ async function add(req: Request, res: Response) {
     ) {
       return res.status(400).json({ message: "Product not available" });
     }
-    // const user = await em.findOne(User, validationResult.data.cart.user);
-    //TODO add validation if the user has a pending cart or not, if he has a pending cart, add the order to that cart
     let cart = await em.findOne(Cart, {
       user: req.body.user,
       state: "Pending",
@@ -57,6 +55,8 @@ async function add(req: Request, res: Response) {
         state: "Pending",
         total: req.body.subtotal,
       });
+    } else {
+      cart.total += validationResult.data.subtotal;
     }
     validationResult.data.cart = cart.id;
     const order = em.create(Order, {
@@ -65,7 +65,6 @@ async function add(req: Request, res: Response) {
       cart: cart,
       subtotal: validationResult.data.subtotal,
     });
-    cart.total += order.subtotal;
     em.persist(cart);
     await em.flush();
     res.status(201).json({ message: "Order created", data: order });
