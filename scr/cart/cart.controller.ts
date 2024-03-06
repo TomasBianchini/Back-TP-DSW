@@ -13,7 +13,13 @@ async function findAll(req: Request, res: Response) {
   try {
     const filter: CartFilter = req.query;
     const carts = await em.find(Cart, filter, {
-      populate: ["orders", "user", "orders.product"],
+      populate: [
+        "orders",
+        "user",
+        "orders.product",
+        "payment_type",
+        "shipping",
+      ],
     });
     res.status(200).json({ message: "Found all carts", data: carts });
   } catch (error: any) {
@@ -27,7 +33,15 @@ async function findOne(req: Request, res: Response) {
     const cart = await em.findOneOrFail(
       Cart,
       { id },
-      { populate: ["orders", "user", "orders.product"] }
+      {
+        populate: [
+          "orders",
+          "user",
+          "orders.product",
+          "payment_type",
+          "shipping",
+        ],
+      }
     );
     res.status(200).json({ message: "Found cart", data: cart });
   } catch (error: any) {
