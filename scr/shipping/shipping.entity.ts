@@ -6,6 +6,12 @@ export class Shipping extends BaseEntity {
   shipmethod!: string;
 
   @Property({ nullable: false })
+  estimatedTime!: number;
+
+  @Property({ nullable: false })
+  cancellationDeadline!: number;
+
+  @Property({ nullable: false })
   price!: number;
 
   @Property({ nullable: false })

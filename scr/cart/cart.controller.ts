@@ -106,4 +106,16 @@ async function remove(req: Request, res: Response) {
   }
 }
 
-export { findAll, findOne, add, update, remove };
+async function cancelCart(req: Request, res: Response) {
+  try {
+    const id = req.params.id;
+    const cart = await em.findOneOrFail(Cart, { id });
+    cart.state = "Canceled";
+    await em.flush();
+    res.status(200).json({ message: "Cart canceled", data: cart });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+export { findAll, findOne, add, update, remove, cancelCart };

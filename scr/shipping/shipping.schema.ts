@@ -11,6 +11,8 @@ const shippingSchema = zod.object({
     .refine((value) => value === "Active" || value === "Archived", {
       message: "State must be either Active or Archived",
     }),
+  estimatedTime: zod.number(),
+  cancellationDeadline: zod.number(),
 });
 
 export function validateShipping(data: any) {
