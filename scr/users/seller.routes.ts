@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { findAll, findOne, remove, update, add } from "./seller.controller.js";
-//TODO add auth middleware and check user type in routes
 
 export const sellerRouter = Router();
 

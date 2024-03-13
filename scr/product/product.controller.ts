@@ -97,7 +97,6 @@ async function filterData(products: Product[]) {
       category: { ...product.category, discounts: filteredDiscounts },
     };
   });
-  //TODO remove category from discounts
   return filteredProducts;
 }
 

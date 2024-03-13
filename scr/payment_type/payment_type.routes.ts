@@ -6,7 +6,6 @@ import {
   remove,
   update,
 } from "./payment_type.controller.js";
-//TODO add auth middleware and check user type in routes
 
 export const payment_typeRouter = Router();
 
