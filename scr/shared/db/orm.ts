@@ -1,23 +1,24 @@
 import { MikroORM } from "@mikro-orm/core";
 import { MongoHighlighter } from "@mikro-orm/mongo-highlighter";
+import { config } from "dotenv";
+
+config();
+const MONGO_URI = process.env.MONGO_URI;
+console.log(MONGO_URI);
+
+const MONGO_DB = process.env.MONGO_DB;
+console.log(MONGO_DB);
 
 export const orm = await MikroORM.init({
   entities: ["dist/**/*.entity.js"],
   entitiesTs: ["src/**/*.entity.ts"],
-  dbName: "hc4gmo",
+  dbName: MONGO_DB,
   type: "mongo",
-  clientUrl: "mongodb+srv://tomassbianchini:VFJnJvLw3ymyqNak@cluster0.ohsbkl9.mongodb.net/",
+  clientUrl: MONGO_URI,
   highlighter: new MongoHighlighter(),
   debug: true,
   allowGlobalContext: true,
-  // schemaGenerator: {
-  //   //never in production
-  //   disableForeignKeys: true,
-  //   createForeignKeyConstraints: true,
-  //   ignoreSchema: [],
-  // },
 });
-
 
 export const syncSchema = async () => {
   const generator = orm.getSchemaGenerator();
@@ -27,11 +28,3 @@ export const syncSchema = async () => {
   */
   await generator.updateSchema();
 };
-
-
-
-
-
-
-
-
