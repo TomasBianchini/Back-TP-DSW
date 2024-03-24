@@ -4,10 +4,8 @@ import { config } from "dotenv";
 
 config();
 const MONGO_URI = process.env.MONGO_URI;
-console.log(MONGO_URI);
 
 const MONGO_DB = process.env.MONGO_DB;
-console.log(MONGO_DB);
 
 export const orm = await MikroORM.init({
   entities: ["dist/**/*.entity.js"],

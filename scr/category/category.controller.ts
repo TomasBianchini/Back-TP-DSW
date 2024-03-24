@@ -35,7 +35,7 @@ async function add(req: Request, res: Response) {
     }
     const category = em.create(Category, validationResult.data);
     await em.flush();
-    res.status(201).json({ message: "Category created ", data: category });
+    res.status(201).json({ message: "Category created", data: category });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
