@@ -60,7 +60,7 @@ async function update(req: Request, res: Response) {
     const sellerToUpdate = await em.findOneOrFail(Seller, { id });
     em.assign(sellerToUpdate, req.body);
     await em.flush();
-    res.status(201).json({ message: "Seller updated", data: sellerToUpdate });
+    res.status(200).json({ message: "Seller updated", data: sellerToUpdate });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }

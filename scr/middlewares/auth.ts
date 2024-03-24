@@ -26,7 +26,7 @@ async function isAdmin(req: Request, res: Response, next: NextFunction) {
     const decode: any = jwt.verify(token, key!);
     const user = decode.user;
     if (user.type !== "Admin") {
-      return res.status(401).json({ message: "Access denied" });
+      return res.status(401).json({ message: "Unauthorized" });
     }
     next();
   } catch (error: any) {
@@ -43,7 +43,7 @@ async function isSeller(req: Request, res: Response, next: NextFunction) {
     const decode: any = jwt.verify(token, key!);
     const user = decode.user;
     if (user.type !== "Seller") {
-      return res.status(401).json({ message: "Access denied" });
+      return res.status(401).json({ message: "Unauthorized" });
     }
     next();
   } catch (error: any) {

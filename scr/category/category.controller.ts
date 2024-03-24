@@ -48,7 +48,7 @@ async function update(req: Request, res: Response) {
     em.assign(categoryToUpdate, req.body);
     await em.flush();
     res
-      .status(201)
+      .status(200)
       .json({ message: "Category updated ", data: categoryToUpdate });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -59,7 +59,7 @@ async function remove(req: Request, res: Response) {
     const id = req.params.id;
     const category = em.getReference(Category, id);
     await em.removeAndFlush(category);
-    res.status(201).json({ message: "Category deleted", data: category });
+    res.status(200).json({ message: "Category deleted", data: category });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }

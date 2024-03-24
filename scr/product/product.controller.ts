@@ -11,7 +11,6 @@ async function findAll(req: Request, res: Response) {
   try {
     const filter: ProductFilter = req.query;
     const products = await em.find(Product, filter, {
-      //TODO fix the populate because it returns category with discounts and that's discounts with category
       populate: ["category", "seller", "reviews", "category.discounts"],
     });
     let filteredProducts = await filterData(products);
@@ -66,7 +65,7 @@ async function update(req: Request, res: Response) {
     const productToUpdate = await em.findOneOrFail(Product, { id });
     em.assign(productToUpdate, req.body);
     await em.flush();
-    res.status(201).json({ message: "Product updated", data: productToUpdate });
+    res.status(200).json({ message: "Product updated", data: productToUpdate });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }

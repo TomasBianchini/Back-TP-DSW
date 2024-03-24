@@ -48,7 +48,7 @@ async function update(req: Request, res: Response) {
     em.assign(payment_typeToUpdate, req.body);
     await em.flush();
     res
-      .status(201)
+      .status(200)
       .json({ message: "Payment type updated", data: payment_typeToUpdate });
   } catch (error: any) {
     res.status(500).json({ message: error.message });

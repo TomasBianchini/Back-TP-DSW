@@ -5,6 +5,10 @@ import { RequestContext } from "@mikro-orm/core";
 import cors from "cors";
 import routes from "./routes.js";
 
+//swagger
+import swaggerUi from "swagger-ui-express";
+import swaggerSetup from "./shared/swagger.js";
+
 const app = express();
 
 //Middlewares
@@ -17,6 +21,7 @@ app.use((req, res, next) => {
 });
 
 //Routes
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSetup));
 app.use("/api", routes);
 
 await syncSchema(); //never in production

@@ -45,7 +45,7 @@ async function update(req: Request, res: Response) {
     em.assign(shippingToUpdate, req.body);
     await em.flush();
     res
-      .status(201)
+      .status(200)
       .json({ message: "Shipping updated", data: shippingToUpdate });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
