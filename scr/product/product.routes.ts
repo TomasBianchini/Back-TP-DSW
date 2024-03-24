@@ -38,7 +38,7 @@ export const productRouter = Router();
  *                message: 
  *                 type: string
  *                data:
- *                  tpye: array
+ *                  type: array
  *                  items:  
  *                   $ref: "#/components/schemas/product"
  *       500:

@@ -40,7 +40,7 @@ export const cartRouter = Router();
  *                message: 
  *                 type: string
  *                data:
- *                  tpye: array
+ *                  type: array
  *                  items:  
  *                   $ref: "#/components/schemas/cart"
  *       500:

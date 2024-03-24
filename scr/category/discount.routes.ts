@@ -40,7 +40,7 @@ export const discountRouter = Router();
  *                message: 
  *                 type: string
  *                data:
- *                  tpye: array
+ *                  type: array
  *                  items:  
  *                   $ref: "#/components/schemas/discount"
  *       404:

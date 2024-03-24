@@ -28,7 +28,7 @@ export const payment_typeRouter = Router();
  *                message: 
  *                 type: string
  *                data:
- *                  tpye: array
+ *                  type: array
  *                  items:  
  *                   $ref: "#/components/schemas/payment_type"
  *       500:

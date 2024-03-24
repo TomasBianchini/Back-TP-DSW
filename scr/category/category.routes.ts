@@ -29,7 +29,7 @@ export const categoryRouter = Router();
  *                message: 
  *                 type: string
  *                data:
- *                  tpye: array
+ *                  type: array
  *                  items:  
  *                   $ref: "#/components/schemas/category"
  *       404:

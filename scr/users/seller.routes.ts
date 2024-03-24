@@ -22,7 +22,7 @@ export const sellerRouter = Router();
  *                message: 
  *                 type: string
  *                data:
- *                  tpye: array
+ *                  type: array
  *                  items:  
  *                   $ref: "#/components/schemas/seller"
  *       404:
@@ -48,14 +48,17 @@ sellerRouter.get("/", findAll);
  *       200:
  *         description: Success
  *         content:
- *           application/json:
+ *          application/json:
  *             schema:
  *               type: object
  *               properties:
  *                message: 
+ *                 type: string
+ *                data:
+ *                   $ref: "#/components/schemas/seller" 
   *      404:
- *        description: Not found
- *        content: {}
+ *         description: Not found
+ *         content: {}
  *       500:
  *         description: Internal server error
  *     security:
@@ -150,6 +153,7 @@ sellerRouter.delete("/:id", remove);
  *                message: 
  *                 type: string
  *                data:
+ *                 $ref: "#/components/schemas/seller"
  *       404:
  *         description: Not found
  *         content: {}
