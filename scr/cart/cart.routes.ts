@@ -151,7 +151,7 @@ cartRouter.post("/", add);
  *     security:
  *       - bearerAuth: []
 */
-cartRouter.put("complete/:id", update);
+cartRouter.put("/complete/:id", update);
 
 /**
  * @swagger
@@ -160,7 +160,7 @@ cartRouter.put("complete/:id", update);
  *     tags:
  *       - Cart
  *     summary: Cancel cart
- *     description: Cancel cart
+ *     description: Cancel cart, update status to cancelled
  *     responses:
  *       200:
  *         description: Success
