@@ -22,7 +22,7 @@ export class Cart extends BaseEntity {
   @ManyToOne(() => User, { nullable: false })
   user!: User;
 
-  @OneToMany(() => Order, (order) => order.cart, {
+  @OneToMany(() => Order, (order: Order) => order.cart, {
     cascade: [Cascade.ALL],
   })
   orders = new Collection<Order>(this);

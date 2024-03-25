@@ -8,7 +8,7 @@ const discountSchema = zod.object({
   state: zod
     .enum(["Archived", "Active"])
     .default("Active")
-    .refine((value) => value === "Active" || value === "Archived", {
+    .refine((value: string) => value === "Active" || value === "Archived", {
       message: "State must be either Active or Archived",
     }),
   category: zod.string(),

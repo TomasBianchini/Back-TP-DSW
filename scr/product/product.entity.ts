@@ -37,7 +37,7 @@ export class Product extends BaseEntity {
   @ManyToOne(() => Seller, { nullable: false })
   seller!: Rel<Seller>;
 
-  @OneToMany(() => Review, (review) => review.product, {
+  @OneToMany(() => Review, (review: Review) => review.product, {
     cascade: [Cascade.ALL],
   })
   reviews = new Collection<Review>(this);

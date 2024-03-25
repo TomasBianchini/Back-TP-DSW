@@ -19,7 +19,7 @@ export class Seller extends User {
   @Property({ nullable: false, unique: true })
   cbu!: string;
 
-  @OneToMany(() => Product, (product) => product.seller, {
+  @OneToMany(() => Product, (product: Product) => product.seller, {
     cascade: [Cascade.ALL],
   })
   products = new Collection<Product>(this);

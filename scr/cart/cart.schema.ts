@@ -7,7 +7,7 @@ const cartSchema = zod.object({
     .optional()
     .default("Pending")
     .refine(
-      (value) =>
+      (value: string) =>
         value === "Completed" || value === "Pending" || value === "Canceled",
       { message: "State must be either Complete, Pending or Canceled" }
     ),

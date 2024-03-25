@@ -11,7 +11,7 @@ const categorySchema = zod.object({
     .enum(["Archived", "Active"])
     .optional()
     .default("Active")
-    .refine((value) => value === "Active" || value === "Archived", {
+    .refine((value: string) => value === "Active" || value === "Archived", {
       message: "State must be either Active or Archived",
     }),
 });

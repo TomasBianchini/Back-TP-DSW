@@ -16,7 +16,7 @@ export class Category extends BaseEntity {
   @Property({ nullable: false })
   state!: "Active" | "Archived";
 
-  @OneToMany(() => Discount, (discount) => discount.category, {
+  @OneToMany(() => Discount, (discount: Discount) => discount.category, {
     cascade: [Cascade.ALL],
   })
   discounts = new Collection<Discount>(this);
