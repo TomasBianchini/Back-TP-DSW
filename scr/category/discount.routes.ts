@@ -51,7 +51,7 @@ export const discountRouter = Router();
  *     security:
  *       - bearerAuth: []
  */
-discountRouter.get("/",  isAdmin ,findAll);
+discountRouter.get("/",  auth ,findAll);
 
 /**
  * @swagger
@@ -82,7 +82,7 @@ discountRouter.get("/",  isAdmin ,findAll);
  *       - bearerAuth: []
  */
 
-discountRouter.get("/:id",  isAdmin, findOne);
+discountRouter.get("/:id",  auth, findOne);
 
 /**
  * @swagger

@@ -41,7 +41,7 @@ export const categoryRouter = Router();
  *       - bearerAuth: []
  */
 
-categoryRouter.get("/", isAdmin, findAll);
+categoryRouter.get("/", auth, findAll);
 
 /**
  * @swagger
@@ -71,7 +71,7 @@ categoryRouter.get("/", isAdmin, findAll);
  *     security:
  *       - bearerAuth: []
  */
-categoryRouter.get("/:id", isAdmin , findOne);
+categoryRouter.get("/:id", auth , findOne);
 /**
  * @swagger
  * /category:
