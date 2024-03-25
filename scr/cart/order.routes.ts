@@ -1,6 +1,6 @@
 import { findAll, findOne, add, update, remove } from "./order.controller.js";
 import { Router } from "express";
-
+import { auth } from "../middlewares/auth.js";
 export const orderRouter = Router();
 
 
@@ -32,7 +32,7 @@ export const orderRouter = Router();
  *     security:
  *       - bearerAuth: []
  */
-orderRouter.get("/", findAll);
+orderRouter.get("/", auth, findAll);
 
 /**
  * @swagger
@@ -62,7 +62,7 @@ orderRouter.get("/", findAll);
  *     security:
  *       - bearerAuth: []
  */
-orderRouter.get("/:id", findOne);
+orderRouter.get("/:id", auth, findOne);
 
 /**
  * @swagger
@@ -98,7 +98,7 @@ orderRouter.get("/:id", findOne);
  *     security:
  *       - bearerAuth: []
  */
-orderRouter.post("/", add);
+orderRouter.post("/", auth, add);
 
 
 /**
@@ -134,8 +134,8 @@ orderRouter.post("/", add);
  *     security:
  *       - bearerAuth: []
 */
-orderRouter.put("/:id", update);
-orderRouter.patch("/:id", update);
+orderRouter.put("/:id", auth, update);
+orderRouter.patch("/:id",auth, update);
 
 /**
  * @swagger
@@ -163,4 +163,4 @@ orderRouter.patch("/:id", update);
  *     security:
  *       - bearerAuth: []
  */
-orderRouter.delete("/:id", remove);
+orderRouter.delete("/:id", auth, remove);

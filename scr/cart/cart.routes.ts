@@ -7,7 +7,7 @@ import {
   remove,
   cancelCart,
 } from "./cart.controller.js";
-
+import { auth } from "../middlewares/auth.js";
 export const cartRouter = Router();
 /**
  * @swagger
@@ -49,7 +49,7 @@ export const cartRouter = Router();
  *     security:
  *       - bearerAuth: []
  */
-cartRouter.get("/", findAll);
+cartRouter.get("/", auth, findAll);
 
 /**
  * @swagger
@@ -79,7 +79,7 @@ cartRouter.get("/", findAll);
  *     security:
  *       - bearerAuth: []
  */
-cartRouter.get("/:id", findOne);
+cartRouter.get("/:id",auth, findOne);
 
 
 /**
@@ -116,7 +116,7 @@ cartRouter.get("/:id", findOne);
  *     security:
  *       - bearerAuth: []
  */
-cartRouter.post("/", add);
+cartRouter.post("/", auth, add);
 
 /**
  * @swagger
@@ -151,7 +151,7 @@ cartRouter.post("/", add);
  *     security:
  *       - bearerAuth: []
 */
-cartRouter.put("/complete/:id", update);
+cartRouter.put("/complete/:id",auth, update);
 
 /**
  * @swagger
@@ -180,7 +180,7 @@ cartRouter.put("/complete/:id", update);
  *       - bearerAuth: []
  */
 
-cartRouter.patch("/cancelCart/:id", cancelCart);
+cartRouter.patch("/cancelCart/:id",auth, cancelCart);
 /**
  * @swagger
  * /cart/:id:
@@ -207,4 +207,4 @@ cartRouter.patch("/cancelCart/:id", cancelCart);
  *     security:
  *       - bearerAuth: []
  */
-cartRouter.delete("/:id", remove);
+cartRouter.delete("/:id",auth, remove);

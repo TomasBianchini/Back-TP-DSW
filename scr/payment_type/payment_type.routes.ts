@@ -6,7 +6,7 @@ import {
   remove,
   update,
 } from "./payment_type.controller.js";
-
+import {auth, isAdmin} from "../middlewares/auth.js";
 export const payment_typeRouter = Router();
 
 /**
@@ -37,7 +37,7 @@ export const payment_typeRouter = Router();
  *     security:
  *       - bearerAuth: []
  */
-payment_typeRouter.get("/", findAll);
+payment_typeRouter.get("/", auth, findAll);
 
 /**
  * @swagger
@@ -67,7 +67,7 @@ payment_typeRouter.get("/", findAll);
  *     security:
  *       - bearerAuth: []
  */
-payment_typeRouter.get("/:id", findOne);
+payment_typeRouter.get("/:id", auth, findOne);
 
 /**
  * @swagger
@@ -103,7 +103,7 @@ payment_typeRouter.get("/:id", findOne);
  *     security:
  *       - bearerAuth: []
  */
-payment_typeRouter.post("/", add);
+payment_typeRouter.post("/", isAdmin, add);
 
 /**
  * @swagger
@@ -131,7 +131,7 @@ payment_typeRouter.post("/", add);
  *     security:
  *       - bearerAuth: []
  */
-payment_typeRouter.delete("/:id", remove);
+payment_typeRouter.delete("/:id", isAdmin, remove);
 
 /**
  * @swagger
@@ -166,5 +166,5 @@ payment_typeRouter.delete("/:id", remove);
  *     security:
  *       - bearerAuth: []
  */
-payment_typeRouter.put("/:id", update);
-payment_typeRouter.patch("/:id", update);
+payment_typeRouter.put("/:id", isAdmin, update);
+payment_typeRouter.patch("/:id", isAdmin, update);

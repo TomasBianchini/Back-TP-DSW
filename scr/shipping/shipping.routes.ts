@@ -6,7 +6,7 @@ import {
   remove,
 } from "./shipping.controller.js";
 import { Router } from "express";
-
+import { auth, isAdmin } from "../middlewares/auth.js";
 export const shippingRouter = Router();
 
 /**
@@ -38,7 +38,7 @@ export const shippingRouter = Router();
  *       - bearerAuth: []
  */
 
-shippingRouter.get("/", findAll);
+shippingRouter.get("/", auth, findAll);
 
 /**
  * @swagger
@@ -69,7 +69,7 @@ shippingRouter.get("/", findAll);
  *       - bearerAuth: []
  */
 
-shippingRouter.get("/:id", findOne);
+shippingRouter.get("/:id", auth, findOne);
 
 /**
  * @swagger
@@ -105,7 +105,7 @@ shippingRouter.get("/:id", findOne);
  *     security:
  *       - bearerAuth: []
  */
-shippingRouter.post("/", add);
+shippingRouter.post("/", isAdmin, add);
 
 /**
  * @swagger
@@ -140,8 +140,8 @@ shippingRouter.post("/", add);
  *     security:
  *       - bearerAuth: []
  */
-shippingRouter.put("/:id", update);
-shippingRouter.patch("/:id", update);
+shippingRouter.put("/:id", isAdmin, update);
+shippingRouter.patch("/:id", isAdmin, update);
 
 
 
@@ -171,4 +171,4 @@ shippingRouter.patch("/:id", update);
  *     security:
  *       - bearerAuth: []
  */
-shippingRouter.delete("/:id", remove);
+shippingRouter.delete("/:id", isAdmin, remove);

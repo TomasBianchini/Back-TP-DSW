@@ -6,7 +6,7 @@ import {
   update,
   remove,
 } from "./discount.controller.js";
-
+import {auth, isAdmin} from "../middlewares/auth.js";
 export const discountRouter = Router();
 
 /**
@@ -51,7 +51,7 @@ export const discountRouter = Router();
  *     security:
  *       - bearerAuth: []
  */
-discountRouter.get("/", findAll);
+discountRouter.get("/",  isAdmin ,findAll);
 
 /**
  * @swagger
@@ -82,7 +82,7 @@ discountRouter.get("/", findAll);
  *       - bearerAuth: []
  */
 
-discountRouter.get("/:id", findOne);
+discountRouter.get("/:id",  isAdmin, findOne);
 
 /**
  * @swagger
@@ -119,7 +119,7 @@ discountRouter.get("/:id", findOne);
  *       - bearerAuth: []
  */
 
-discountRouter.post("/", add);
+discountRouter.post("/", isAdmin, add);
 
 /**
  * @swagger
@@ -155,8 +155,8 @@ discountRouter.post("/", add);
  *     security:
  *       - bearerAuth: []
  */
-discountRouter.put("/:id", update);
-discountRouter.patch("/:id", update);
+discountRouter.put("/:id",  isAdmin, update);
+discountRouter.patch("/:id",  isAdmin, update);
 
 /**
  * @swagger
@@ -185,4 +185,4 @@ discountRouter.patch("/:id", update);
  *       - bearerAuth: []
  */
 
-discountRouter.delete("/:id", remove);
+discountRouter.delete("/:id", isAdmin, remove);

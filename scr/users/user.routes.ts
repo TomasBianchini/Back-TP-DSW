@@ -47,7 +47,7 @@ export const userRouter = Router();
  *     security:
  *       - bearerAuth: []
  */
-userRouter.get("/", findAll);
+userRouter.get("/", isAdmin, findAll);
 
 /**
  * @swagger
@@ -76,7 +76,7 @@ userRouter.get("/", findAll);
  *       - bearerAuth: []
  */
 
-userRouter.get("/:id", findOne);
+userRouter.get("/:id", auth, findOne);
 
 /**
  * @swagger
@@ -141,7 +141,7 @@ userRouter.post("/", add);
  *       - bearerAuth: []
  */
 
-userRouter.delete("/:id", remove);
+userRouter.delete("/:id", isAdmin, remove);
 
 
 /**
@@ -178,5 +178,5 @@ userRouter.delete("/:id", remove);
  *       - bearerAuth: []
  */
 
-userRouter.put("/:id", update);
-userRouter.patch("/:id", update);
+userRouter.put("/:id", isAdmin, update);
+userRouter.patch("/:id", isAdmin, update);

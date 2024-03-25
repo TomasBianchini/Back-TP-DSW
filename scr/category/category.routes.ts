@@ -41,7 +41,7 @@ export const categoryRouter = Router();
  *       - bearerAuth: []
  */
 
-categoryRouter.get("/", findAll);
+categoryRouter.get("/", isAdmin, findAll);
 
 /**
  * @swagger
@@ -71,7 +71,7 @@ categoryRouter.get("/", findAll);
  *     security:
  *       - bearerAuth: []
  */
-categoryRouter.get("/:id", findOne);
+categoryRouter.get("/:id", isAdmin , findOne);
 /**
  * @swagger
  * /category:
@@ -105,7 +105,7 @@ categoryRouter.get("/:id", findOne);
  *       - bearerAuth: []
  */
 
-categoryRouter.post("/", add);
+categoryRouter.post("/", isAdmin , add);
 
 /**
  * @swagger
@@ -141,8 +141,8 @@ categoryRouter.post("/", add);
  *     security:
  *       - bearerAuth: []
  */
-categoryRouter.put("/:id", update);
-categoryRouter.patch("/:id", update);
+categoryRouter.put("/:id" ,  isAdmin , update);
+categoryRouter.patch("/:id",  isAdmin, update);
 
 /**
  * @swagger
@@ -172,4 +172,4 @@ categoryRouter.patch("/:id", update);
  *     security:
  *       - bearerAuth: []
  */
-categoryRouter.delete("/:id", remove);
+categoryRouter.delete("/:id", isAdmin, remove);

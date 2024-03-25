@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { findAll, findOne, remove, update, add } from "./seller.controller.js";
-
+import { auth, isAdmin } from "../middlewares/auth.js";
 export const sellerRouter = Router();
 
 /**
@@ -34,7 +34,7 @@ export const sellerRouter = Router();
  *       - bearerAuth: []
  */
 
-sellerRouter.get("/", findAll);
+sellerRouter.get("/", isAdmin, findAll);
 
 /**
  * @swagger
@@ -65,7 +65,7 @@ sellerRouter.get("/", findAll);
  *       - bearerAuth: []
  */
 
-sellerRouter.get("/:id", findOne);
+sellerRouter.get("/:id", auth, findOne);
 
 /**
  * @swagger
@@ -126,7 +126,7 @@ sellerRouter.post("/", add);
  *     security:
  *       - bearerAuth: []
  */
-sellerRouter.delete("/:id", remove);
+sellerRouter.delete("/:id", isAdmin, remove);
 
 /**
  * @swagger
@@ -162,5 +162,5 @@ sellerRouter.delete("/:id", remove);
  *     security:
  *       - bearerAuth: []
  */
-sellerRouter.put("/:id", update);
-sellerRouter.patch("/:id", update);
+sellerRouter.put("/:id",isAdmin, update);
+sellerRouter.patch("/:id", isAdmin, update);

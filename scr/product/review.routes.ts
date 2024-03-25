@@ -1,7 +1,7 @@
 import Router from "express";
 import { findAll, findOne, add, update, remove } from "./review.controller.js";
 import { isAppropriate } from "../middlewares/chat_gpt.js";
-
+import { auth } from "../middlewares/auth.js";
 export const reviewRouter = Router();
 
 
@@ -35,7 +35,7 @@ export const reviewRouter = Router();
  *     security:
  *       - bearerAuth: []
  */
-reviewRouter.get("/", findAll);
+reviewRouter.get("/", auth, findAll);
 
 /**
  * @swagger
@@ -61,7 +61,7 @@ reviewRouter.get("/", findAll);
  *     security:
  *       - bearerAuth: [] 
  */
-reviewRouter.get("/:id", findOne);
+reviewRouter.get("/:id",auth, findOne);
 
 /**
  * @swagger
@@ -97,7 +97,7 @@ reviewRouter.get("/:id", findOne);
  *     security:
  *       - bearerAuth: []
  */
-reviewRouter.post("/", isAppropriate, add);
+reviewRouter.post("/", [auth,isAppropriate], add);
 
 /**
  * @swagger
@@ -131,8 +131,8 @@ reviewRouter.post("/", isAppropriate, add);
  *     security:
  *       - bearerAuth: []
  */
-reviewRouter.put("/:id", update);
-reviewRouter.patch("/:id", update);
+reviewRouter.put("/:id", auth, update);
+reviewRouter.patch("/:id", auth, update);
 
 /**
  * @swagger
@@ -158,4 +158,4 @@ reviewRouter.patch("/:id", update);
  *     security:
  *       - bearerAuth: []
  */
-reviewRouter.delete("/:id", remove);
+reviewRouter.delete("/:id", auth, remove);
