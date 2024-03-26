@@ -117,13 +117,13 @@ const swaggerDefinition: OAS3Definition = {
                     type: "string",
                 },
                 cancellationDeadline: {
-                    type: "string",
+                    type: "number",
                 },
                 price: {
                     type: "number",
                 },
                 estimatedTime: {
-                    type: "string",
+                    type: "number",
                 },
                 id: {
                     type: "string",

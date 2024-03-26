@@ -16,7 +16,7 @@ export const shippingRouter = Router();
  *     tags:
  *       - Shipping
  *     summary: Get all shippings
- *     description: Retrieve all shippings
+ *     description: Retrieve all shippings, the cancellationDeadline and estimatedTime are in hours
  *     responses:
  *       200:
  *         description: Success
@@ -46,7 +46,7 @@ shippingRouter.get("/", auth, findAll);
  *   get:
  *     tags:
  *       - Shipping
- *     summary: Get shipping by id
+ *     summary: Get shipping by id, the cancellationDeadline and estimatedTime are in hours
  *     description: Retrieve shipping by id
  *     responses:
  *       200:
@@ -78,7 +78,7 @@ shippingRouter.get("/:id", auth, findOne);
  *     tags:
  *       - Shipping
  *     summary: Create shipping
- *     description: Create shipping
+ *     description: Create shipping, the cancellationDeadline and estimatedTime must be in hours
  *     requestBody:
  *       required: true
  *       content:
@@ -114,7 +114,7 @@ shippingRouter.post("/", isAdmin, add);
  *     tags:
  *       - Shipping
  *     summary: Update shipping
- *     description: Update shipping
+ *     description: Update shipping, the cancellationDeadline and estimatedTime must be in hours
  *     requestBody:
  *       required: true
  *       content:
