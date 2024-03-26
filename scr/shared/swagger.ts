@@ -8,8 +8,7 @@ const swaggerDefinition: OAS3Definition = {
   },
   servers: [
     {
-        //TODO CHANGE THIS URL 
-      url: "http://localhost:3000/api",
+      url: "https://back-tp-dsw.onrender.com/api",
     },
   ],
   components: {
