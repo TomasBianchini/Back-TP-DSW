@@ -90,17 +90,27 @@ classDiagram
 |CUU/Epic|1. Cancelar un carrito <br> 3. Envio del carrito <br> 4. Moderación de reviews con la api de OpenAI|
 ## 3. Instrucciones de instalación
   a. Clona este repositorio en tu máquina local:
+  
   ```bash
   git clone https://github.com/TomasBianchini/Back-TP-DSW.git
   ```
+
   b. Installar las dependencias usando npm:
-      npm install
+     
+     npm install
+  
   c. Crea una cuenta en [MongoDB Atlas](https://www.mongodb.com/es/atlas) si aún no tienes una.
+  
   d. Crea un clúster en MongoDB Atlas.
+  
   e. Crea un archivo .env y agrega la configuración de tu conexión a MongoDB Atlas en el archivo .env
+  
     MONGO_DB=nombre_de_tu_base_de_datos
+    
     MONGO_URI=tu_URI_de_conexión_a_MongoDB_Atlas
-  f. Ejecutar comando “ npm run start:dev”
+  
+  f.Ejecutar comando “ npm run start:dev”
+
 La aplicación estará disponible en http://localhost:3000 
   
 ## 4. Documentación de la API 
