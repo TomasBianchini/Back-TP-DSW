@@ -88,6 +88,20 @@ classDiagram
 |:-|:-|
 |Listado + detalle|1. Listado de carritos completados => detalle de la fecha de compra, todos los productos con la cantidad, <br> el tipo de envio elegido, y la posibilidad de cancelar la compra si esta dentro del tiempo permitido |
 |CUU/Epic|1. Cancelar un carrito <br> 3. Envio del carrito <br> 4. Moderación de reviews con la api de OpenAI|
-## 3. Documentación de la API 
+## 3. Instrucciones de instalación
+  a. Clona este repositorio en tu máquina local:
+  ```bash
+  git clone https://github.com/TomasBianchini/Back-TP-DSW.git
+  b. Installar las dependencias usando npm:
+      npm install
+  c. Crea una cuenta en [MongoDB Atlas](https://www.mongodb.com/es/atlas) si aún no tienes una.
+  d. Crea un clúster en MongoDB Atlas.
+  e. Crea un archivo .env y agrega la configuración de tu conexión a MongoDB Atlas en el archivo .env
+    MONGO_DB=nombre_de_tu_base_de_datos
+    MONGO_URI=tu_URI_de_conexión_a_MongoDB_Atlas
+  f. Ejecutar comando “ npm run start:dev”
+La aplicación estará disponible en http://localhost:3000 
+  
+## 4. Documentación de la API 
 Debido a las limitaciones de la cuenta gratuita en Render, puede haber un retraso de unos minutos en la carga de la documentación.
 [Documentación](https://back-tp-dsw.onrender.com/api-docs/)
