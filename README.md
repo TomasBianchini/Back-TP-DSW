@@ -88,3 +88,6 @@ classDiagram
 |:-|:-|
 |Listado + detalle|1. Listado de carritos completados => detalle de la fecha de compra, todos los productos con la cantidad, <br> el tipo de envio elegido, y la posibilidad de cancelar la compra si esta dentro del tiempo permitido |
 |CUU/Epic|1. Cancelar un carrito <br> 3. Envio del carrito <br> 4. Moderación de reviews con la api de OpenAI|
+## 3. Documentación de la API 
+Debido a las limitaciones de la cuenta gratuita en Render, puede haber un retraso de unos minutos en la carga de la documentación.
+[Documentación](https://back-tp-dsw.onrender.com/api-docs/)
