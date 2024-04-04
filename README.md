@@ -92,6 +92,7 @@ classDiagram
   a. Clona este repositorio en tu máquina local:
   ```bash
   git clone https://github.com/TomasBianchini/Back-TP-DSW.git
+  ```
   b. Installar las dependencias usando npm:
       npm install
   c. Crea una cuenta en [MongoDB Atlas](https://www.mongodb.com/es/atlas) si aún no tienes una.
