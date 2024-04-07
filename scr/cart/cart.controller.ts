@@ -109,7 +109,26 @@ async function remove(req: Request, res: Response) {
 async function cancelCart(req: Request, res: Response) {
   try {
     const id = req.params.id;
-    const cart = await em.findOneOrFail(Cart, { id });
+    const cart = await em.findOneOrFail(Cart, { id }, {populate:['shipping', 'orders', 'orders.product']});
+    const currentDate = new Date();
+    const cartUpdatedAt = new Date(cart.updatedAt ?? new Date());
+    const timeDifference =
+        currentDate.valueOf() - cartUpdatedAt.valueOf();
+    const hoursDifference = timeDifference / (1000 * 3600);
+    if(cart.shipping && cart.shipping.cancellationDeadline && hoursDifference > cart.shipping.cancellationDeadline) {
+      throw new Error("The cart can't be canceled");
+    }
+    for (const order of cart.orders) {
+      let productId: string;
+      if (typeof order.product === 'string') {
+        productId = order.product;
+      } else {
+        productId = order.product.id as string;
+      }
+      const product = await em.findOneOrFail(Product, { id: productId });
+      product.stock += order.quantity;
+      await em.persistAndFlush(product);
+    }
     cart.state = "Canceled";
     await em.flush();
     res.status(200).json({ message: "Cart canceled", data: cart });

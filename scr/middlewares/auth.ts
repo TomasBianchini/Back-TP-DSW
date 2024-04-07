@@ -14,8 +14,7 @@ async function auth(req: Request, res: Response, next: NextFunction) {
       return res.status(401).json({ message: "Invalid token format" });
     }
     const realToken = tokenParts[1];
-    const decode: any = jwt.verify(realToken, key!);
-    req.body.user = decode.user;
+    jwt.verify(realToken, key!);
     next();
   } catch (error: any) {
     return res.status(401).json({ message: "Invalid token" });
