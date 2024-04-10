@@ -9,7 +9,6 @@ interface ApiResponse {
   message: string;
   data: Review[];
 }
-const InappropriateMensseges = ['The seller is a fool, I will not buy there again', 'The seller is a fool', 'The product is a piece of shit', 'The seller is a dork']
 describe('Endpoint POST "/api/review"', () => {
     let body: ApiResponse;
     let response: Response;
@@ -53,7 +52,7 @@ describe('Endpoint POST "/api/review"', () => {
       const requestBody={
         product: '65fefcd9743450fd6acb4b1f',
         rating: 4,
-        comment: 'The seller is a fool, I will not buy there again'
+        comment: 'The product is a piece of shit'
       }
       response = await fetch(
         'http://localhost:3000/api/review', {

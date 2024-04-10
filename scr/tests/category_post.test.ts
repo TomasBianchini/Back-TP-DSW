@@ -17,7 +17,8 @@ describe('Endpoint POST "/api/category"', () => {
    describe('With access token', () => {
     beforeAll(async () => {
       const token  = process.env.TOKEN;
-      const requestBody={ category: 'prueba endpoint post'}
+      const requestBody=
+      { category: 'other castegory 3', state: 'Archived' }
       response = await fetch(
   
         'http://localhost:3000/api/category', {
