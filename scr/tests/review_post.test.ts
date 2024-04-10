@@ -1,7 +1,9 @@
 import { beforeAll, describe, expect, expectTypeOf, test} from 'vitest';
 import { Review } from '../product/review.entity.js';
-import express from 'express';
-const app = express();
+import { config } from "dotenv";
+
+config()
+
 
 interface ApiResponse {
   message: string;
@@ -14,7 +16,7 @@ describe('Endpoint POST "/api/review"', () => {
   
    describe('With access token', () => {
     beforeAll(async () => {
-      const token  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjVkM2I1YzRjZGMwMjk2ODkyNzcyZjQ0IiwiY3JlYXRlZEF0IjoiMjAyNC0wMi0xOVQyMDoxMDo0NC44MTNaIiwidXBkYXRlZEF0IjoiMjAyNC0wMy0xMlQxMzo0MDozNS44NDZaIiwidXNlcl9uYW1lIjoiVG9tYXMiLCJlbWFpbCI6InRvbWFzQGdtYWlsLmNvbSIsInBhc3N3b3JkIjoiJGFyZ29uMmlkJHY9MTkkbT02NTUzNix0PTMscD00JGxreWdlRjFTaTRHRkF2VnpGQ3FnWXckd3A1TzJIV1NSOVNDb3IyN0swbnN5MkdVeFM0NSs4TTE5NHkyMlFEMHJWOCIsImFkZHJlc3MiOiJtb250ZXZpZGVvIDEzMzIiLCJ0eXBlIjoiQWRtaW4iLCJzdGF0ZSI6IkFjdGl2ZSJ9LCJpYXQiOjE3MTI3NDgwNDksImV4cCI6MTcxMjc1NTI0OX0.vwK9FwSBeh7ihCHdC0kL8U6RDB5-gQLqj6UKbGAxcv8';
+      const token  = process.env.TOKEN;
       const requestBody={
         product: '65fefcd9743450fd6acb4b1f',
         rating: 4,
@@ -47,7 +49,7 @@ describe('Endpoint POST "/api/review"', () => {
   
    describe('With access token and inappropriate  lenguage', () => {
     beforeAll(async () => {
-      const token  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjVkM2I1YzRjZGMwMjk2ODkyNzcyZjQ0IiwiY3JlYXRlZEF0IjoiMjAyNC0wMi0xOVQyMDoxMDo0NC44MTNaIiwidXBkYXRlZEF0IjoiMjAyNC0wMy0xMlQxMzo0MDozNS44NDZaIiwidXNlcl9uYW1lIjoiVG9tYXMiLCJlbWFpbCI6InRvbWFzQGdtYWlsLmNvbSIsInBhc3N3b3JkIjoiJGFyZ29uMmlkJHY9MTkkbT02NTUzNix0PTMscD00JGxreWdlRjFTaTRHRkF2VnpGQ3FnWXckd3A1TzJIV1NSOVNDb3IyN0swbnN5MkdVeFM0NSs4TTE5NHkyMlFEMHJWOCIsImFkZHJlc3MiOiJtb250ZXZpZGVvIDEzMzIiLCJ0eXBlIjoiQWRtaW4iLCJzdGF0ZSI6IkFjdGl2ZSJ9LCJpYXQiOjE3MTI3NDgwNDksImV4cCI6MTcxMjc1NTI0OX0.vwK9FwSBeh7ihCHdC0kL8U6RDB5-gQLqj6UKbGAxcv8';
+      const token  =  process.env.TOKEN;    
       const requestBody={
         product: '65fefcd9743450fd6acb4b1f',
         rating: 4,
