@@ -13,13 +13,17 @@ async function isAppropriate(req: Request, res: Response, next: NextFunction) {
       {
         role: "system",
         content:
-          "Rate the following product review as true if it contains no swear words and as false if it contains swear words.",
+          "Please rate the following product review for inappropriate language.",
       },
-      { role: "user", content: review },
+      { 
+        role: "user",
+        content: 
+        `This is a product review "${review}". Please rate the review as true if it contains no inappropriate language and as false if it contains inappropriate language.`
+       },
     ],
   });
   if (response.choices[0].message.content?.toLowerCase() === "false") {
-    return res.status(400).send({ message: "Inappropriate language detected" });
+    return res.status(403).send({ message: "Inappropriate language detected" });
   }
   next();
 }
