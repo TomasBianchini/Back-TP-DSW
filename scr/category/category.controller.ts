@@ -2,6 +2,7 @@ import { Category } from "./category.entity.js";
 import { Request, Response } from "express";
 import { orm } from "../shared/db/orm.js";
 import { validateCategory } from "./category.schema.js";
+import { populate } from "dotenv";
 
 const em = orm.em;
 async function findAll(req: Request, res: Response) {
@@ -20,7 +21,7 @@ async function findAll(req: Request, res: Response) {
 async function findOne(req: Request, res: Response) {
   try {
     const id = req.params.id;
-    const category = await em.findOneOrFail(Category, { id });
+    const category = await em.findOneOrFail(Category, { id }, {populate: ["discounts"]});
     res.status(200).json({ message: "Found category", data: category });
   } catch (error: any) {
     res.status(500).json({ message: error.message });

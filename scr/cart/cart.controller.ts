@@ -17,10 +17,12 @@ async function findAll(req: Request, res: Response) {
         "orders",
         "user",
         "orders.product",
+        "orders.product.category",
         "payment_type",
         "shipping",
       ],
     });
+  
     res.status(200).json({ message: "Found all carts", data: carts });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -38,6 +40,7 @@ async function findOne(req: Request, res: Response) {
           "orders",
           "user",
           "orders.product",
+          "orders.product.category",
           "payment_type",
           "shipping",
         ],
@@ -136,5 +139,7 @@ async function cancelCart(req: Request, res: Response) {
     res.status(500).json({ message: error.message });
   }
 }
+
+
 
 export { findAll, findOne, add, update, remove, cancelCart };

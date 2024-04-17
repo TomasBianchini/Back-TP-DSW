@@ -38,10 +38,10 @@ describe('Endpoint POST "/api/review"', () => {
       expect(response.status).toBe(201);
     });
   
-    test('The response should has a message', () => {
+    test('The response should have a message', () => {
       expectTypeOf(body.message).toBeString();
     });
-    test('The response should has the review data', () => {
+    test('The response should have the review data', () => {
       expect(body.data).toBeDefined();
     });
    });
@@ -72,8 +72,8 @@ describe('Endpoint POST "/api/review"', () => {
       expect(response.status).toBe(403);
     });
   
-    test('The response should has a message', () => {
-      expectTypeOf(body.message).toBeString();
+    test('The response should have a message', () => {
+      expect(body.message).toBe('Inappropriate language detected');
     });
    });
 
@@ -102,7 +102,7 @@ describe('Endpoint POST "/api/review"', () => {
       expect(response.status).toBe(403);
     });
   
-    test('The response should has a message', () => {
+    test('The response should have a message', () => {
       expectTypeOf(body.message).toBeString();
     });
    });
@@ -132,7 +132,7 @@ describe('Endpoint POST "/api/review"', () => {
         expect(response.status).toBe(401);
       });
   
-      test('The response should has a message', () => {
+      test('The response should have a message', () => {
         expectTypeOf(body.message).toBeString();
       });
     });

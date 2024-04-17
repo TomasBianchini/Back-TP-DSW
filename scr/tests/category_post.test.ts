@@ -18,9 +18,8 @@ describe('Endpoint POST "/api/category"', () => {
     beforeAll(async () => {
       const token  = process.env.TOKEN;
       const requestBody=
-      { category: 'other castegory 3', state: 'Archived' }
+      { category: 'Prueba category test3', state: 'Archived' }
       response = await fetch(
-  
         'http://localhost:3000/api/category', {
           method: 'POST',
           headers: {
@@ -49,7 +48,6 @@ describe('Endpoint POST "/api/category"', () => {
     beforeAll(async () => {
       const requestBody={ category: 'prueba'}
       response = await fetch(
-  
         'http://localhost:3000/api/category', {
           method: 'POST',
           headers: {
