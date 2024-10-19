@@ -1,16 +1,16 @@
-import { Response, Request } from "express";
-import { orm } from "../shared/db/orm.js";
-import { Order } from "./order.entity.js";
-import { validateOrder } from "./order.schema.js";
-import { Product } from "../product/product.entity.js";
-import { Cart } from "./cart.entity.js";
-
+import { Response, Request } from 'express';
+import { orm } from '../../shared/db/orm.js';
+import { Order } from '../entities/order.entity.js';
+import { validateOrder } from '../schemas/order.schema.js';
+import { Product } from '../../product/product.entity.js';
+import { Cart } from '../entities/cart.entity.js';
+import { checkProductAvailability } from '../../product/product.service.js';
 const em = orm.em;
 
 async function findAll(req: Request, res: Response) {
   try {
-    const orders = await em.find(Order, {}, { populate: ["product"] });
-    res.status(200).json({ message: "Found all orders", data: orders });
+    const orders = await em.find(Order, {}, { populate: ['product'] });
+    res.status(200).json({ message: 'Found all orders', data: orders });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -22,9 +22,9 @@ async function findOne(req: Request, res: Response) {
     const order = await em.findOneOrFail(
       Order,
       { id },
-      { populate: ["product"] }
+      { populate: ['product'] }
     );
-    res.status(200).json({ message: "Found order", data: order });
+    res.status(200).json({ message: 'Found order', data: order });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -32,6 +32,7 @@ async function findOne(req: Request, res: Response) {
 
 async function add(req: Request, res: Response) {
   try {
+    const cartId = req.params.cart_id;
     const validationResult = validateOrder(req.body);
     if (!validationResult.success) {
       return res.status(400).json({ message: validationResult.error.message });
@@ -39,22 +40,17 @@ async function add(req: Request, res: Response) {
     const product = await em.findOne(Product, validationResult.data.product);
     if (
       !product ||
-      !product.isActive() ||
-      !product.isAvailable(validationResult.data.quantity)
+      (await !checkProductAvailability(product, validationResult.data.quantity))
     ) {
-      return res.status(400).json({ message: "Product not available" });
+      return res.status(400).json({ message: 'Product not available' });
     }
     let cart = await em.findOne(Cart, {
+      id: cartId,
       user: req.body.user,
-      state: "Pending",
+      state: 'Pending',
     });
-
     if (!cart) {
-      cart = em.create(Cart, {
-        user: req.body.user,
-        state: "Pending",
-        total: req.body.subtotal,
-      });
+      return res.status(404).json({ message: 'Cart not found' });
     } else {
       cart.total += validationResult.data.subtotal;
     }
@@ -67,7 +63,7 @@ async function add(req: Request, res: Response) {
     });
     em.persist(cart);
     await em.flush();
-    res.status(201).json({ message: "Order created", data: order });
+    res.status(201).json({ message: 'Order created', data: order });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -79,7 +75,7 @@ async function update(req: Request, res: Response) {
     const orderToUpdate = await em.findOneOrFail(Order, { id });
     em.assign(orderToUpdate, req.body);
     await em.flush();
-    res.status(200).json({ message: "Order updated", data: orderToUpdate });
+    res.status(200).json({ message: 'Order updated', data: orderToUpdate });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -91,7 +87,7 @@ async function remove(req: Request, res: Response) {
     const order = em.getReference(Order, id);
     em.remove(order);
     await em.flush();
-    res.status(200).json({ message: "Order removed" });
+    res.status(200).json({ message: 'Order removed' });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
