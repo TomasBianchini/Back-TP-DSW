@@ -39,8 +39,8 @@ async function add(req: Request, res: Response) {
     const product = await em.findOne(Product, validationResult.data.product);
     if (
       !product ||
-      product.state === "Archived" ||
-      product.stock < validationResult.data.quantity
+      !product.isActive() ||
+      !product.isAvailable(validationResult.data.quantity)
     ) {
       return res.status(400).json({ message: "Product not available" });
     }

@@ -119,7 +119,7 @@ async function cancelCart(req: Request, res: Response) {
         currentDate.valueOf() - cartUpdatedAt.valueOf();
     const hoursDifference = timeDifference / (1000 * 3600);
     if(cart.shipping && cart.shipping.cancellationDeadline && hoursDifference > cart.shipping.cancellationDeadline) {
-      throw new Error("The cart can't be canceled");
+      throw new Error("The cart can't be cancelled");
     }
     for (const order of cart.orders) {
       let productId: string;

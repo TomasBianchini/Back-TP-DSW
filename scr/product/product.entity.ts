@@ -41,4 +41,11 @@ export class Product extends BaseEntity {
     cascade: [Cascade.ALL],
   })
   reviews = new Collection<Review>(this);
+  isActive() {
+    return this.state === "Active" ? true : false;
+  }
+  
+  isAvailable(quantity: number) {
+    return this.stock >= quantity ? true : false;
+  }
 }
