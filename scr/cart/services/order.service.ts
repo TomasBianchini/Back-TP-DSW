@@ -2,6 +2,7 @@ import { Order } from '../entities/order.entity.js';
 import { Product } from '../../product/product.entity.js';
 import { validateOrder } from '../schemas/order.schema.js';
 import { orm } from '../../shared/db/orm.js';
+import { checkProductAvailability } from '../../product/product.service.js';
 
 const em = orm.em;
 
@@ -21,7 +22,7 @@ async function updateOrders(orders: Order[]) {
           id,
           state: 'Active',
         });
-        if (productToUpdate.stock < order.quantity) {
+        if (!checkProductAvailability(productToUpdate, order.quantity)) {
           throw new Error('Product not available');
         }
         productToUpdate.stock -= order.quantity;
