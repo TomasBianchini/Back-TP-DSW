@@ -8,7 +8,6 @@ import {
 } from '@mikro-orm/core';
 
 import { BaseEntity } from '../../shared/db/baseEntity.entity.js';
-
 import { User } from '../../users/user.entity.js';
 import { Order } from './order.entity.js';
 import { PaymentType } from '../../payment_type/payment_type.entity.js';

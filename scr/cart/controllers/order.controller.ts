@@ -9,7 +9,12 @@ const em = orm.em;
 
 async function findAll(req: Request, res: Response) {
   try {
-    const orders = await em.find(Order, {}, { populate: ['product'] });
+    const id = req.params.cart_id;
+    const orders = await em.find(
+      Order,
+      { cart: id },
+      { populate: ['product'] }
+    );
     res.status(200).json({ message: 'Found all orders', data: orders });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
