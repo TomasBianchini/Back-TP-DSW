@@ -13,16 +13,16 @@ import { Router } from 'express';
 
 export const router = Router();
 
-router.use('/category', categoryRouter);
-router.use('/discount', discountRouter);
-router.use('/payment_type', payment_typeRouter);
-router.use('/user', userRouter);
-router.use('/seller', sellerRouter);
-router.use('/product', productRouter);
+router.use('/categories', categoryRouter);
+router.use('/discounts', discountRouter);
+router.use('/payment_types', payment_typeRouter);
+router.use('/users', userRouter);
+router.use('/sellers', sellerRouter);
+router.use('/products', productRouter);
 router.use('/login', loginRouter);
-router.use('/review', reviewRouter);
-router.use('/order', orderRouter);
-router.use('/cart', cartRouter);
-router.use('/shipping', shippingRouter);
+router.use('/reviews', reviewRouter);
+router.use('/orders', orderRouter);
+router.use('/carts', cartRouter);
+router.use('/shippings', shippingRouter);
 
 export default router;

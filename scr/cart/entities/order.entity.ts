@@ -1,10 +1,10 @@
-import { Entity, Property, ManyToOne } from '@mikro-orm/core';
+import { Entity, Property, ManyToOne, Reference } from '@mikro-orm/core';
 
 import { BaseEntity } from '../../shared/db/baseEntity.entity.js';
 
 import { Product } from '../../product/product.entity.js';
-import { Cart } from './cart.entity.js';
 
+import { Cart } from './cart.entity.js';
 @Entity()
 export class Order extends BaseEntity {
   @Property({ nullable: false })
@@ -16,6 +16,6 @@ export class Order extends BaseEntity {
   @Property({ nullable: false })
   subtotal!: number;
 
-  @ManyToOne(() => Cart, { nullable: false })
-  cart!: Cart;
+  @ManyToOne(() => Cart, { nullable: false, lazy: true })
+  cart!: Reference<Cart>;
 }
