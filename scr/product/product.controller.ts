@@ -11,7 +11,7 @@ async function findAll(req: Request, res: Response) {
   try {
     const filter: ProductFilter = req.query;
     const products = await em.find(Product, filter, {
-      populate: ['category', 'seller', 'reviews', 'category.discounts'],
+      populate: ['category', 'seller', 'reviews'],
     });
     let filteredProducts = await filterData(products);
     return res
@@ -28,7 +28,7 @@ async function findOne(req: Request, res: Response) {
     const product = await em.findOneOrFail(
       Product,
       { id },
-      { populate: ['category', 'seller', 'reviews', 'category.discounts'] }
+      { populate: ['category', 'seller', 'reviews'] }
     );
     let filteredProduct = await filterData([product]);
     res

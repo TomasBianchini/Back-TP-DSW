@@ -18,6 +18,7 @@ export class Category extends BaseEntity {
 
   @OneToMany(() => Discount, (discount: Discount) => discount.category, {
     cascade: [Cascade.ALL],
+    eager: true,
   })
   discounts = new Collection<Discount>(this);
 }
