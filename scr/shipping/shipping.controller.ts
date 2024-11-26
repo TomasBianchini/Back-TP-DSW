@@ -17,7 +17,10 @@ async function findAll(req: Request, res: Response, next: NextFunction) {
 async function findOne(req: Request, res: Response, next: NextFunction) {
   try {
     const id = req.params.id;
-    const shipping = await em.findOneOrFail(Shipping, { id });
+    const shipping = await em.findOne(Shipping, { id });
+    if (!shipping) {
+      return res.status(404).json({ message: 'Shipping not found' });
+    }
     res.status(200).json({ message: 'Found shipping', data: shipping });
   } catch (error: any) {
     next(error);
@@ -41,7 +44,10 @@ async function add(req: Request, res: Response, next: NextFunction) {
 async function update(req: Request, res: Response, next: NextFunction) {
   try {
     const id = req.params.id;
-    const shippingToUpdate = await em.findOneOrFail(Shipping, { id });
+    const shippingToUpdate = await em.findOne(Shipping, { id });
+    if (!shippingToUpdate) {
+      return res.status(404).json({ message: 'Shipping not found' });
+    }
     em.assign(shippingToUpdate, req.body);
     await em.flush();
     res
