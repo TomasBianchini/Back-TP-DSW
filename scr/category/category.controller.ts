@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from 'express';
 import { orm } from '../shared/db/orm.js';
 import { validateCategory } from './category.schema.js';
 import { populate } from 'dotenv';
+import { Discount } from './discount.entity.js';
 
 const em = orm.em;
 async function findAll(req: Request, res: Response, next: NextFunction) {
@@ -21,11 +22,14 @@ async function findAll(req: Request, res: Response, next: NextFunction) {
 async function findOne(req: Request, res: Response, next: NextFunction) {
   try {
     const id = req.params.id;
-    const category = await em.findOneOrFail(
+    const category = await em.findOne(
       Category,
       { id },
       { populate: ['discounts'] }
     );
+    if (!category) {
+      return res.status(404).json({ message: 'Category not found' });
+    }
     res.status(200).json({ message: 'Found category', data: category });
   } catch (err: any) {
     next(err);
@@ -49,7 +53,10 @@ async function add(req: Request, res: Response, next: NextFunction) {
 async function update(req: Request, res: Response, next: NextFunction) {
   try {
     const id = req.params.id;
-    const categoryToUpdate = await em.findOneOrFail(Category, { id });
+    const categoryToUpdate = await em.findOne(Category, { id });
+    if (!categoryToUpdate) {
+      return res.status(404).json({ message: 'Category not found' });
+    }
     em.assign(categoryToUpdate, req.body);
     await em.flush();
     res
@@ -62,8 +69,13 @@ async function update(req: Request, res: Response, next: NextFunction) {
 async function remove(req: Request, res: Response, next: NextFunction) {
   try {
     const id = req.params.id;
-    const category = em.getReference(Category, id);
-    await em.removeAndFlush(category);
+    const category = em.findOne(Category, { id }, { populate: ['discounts'] });
+    if (!category) {
+      return res.status(404).json({ message: 'Category not found' });
+    }
+    await em.nativeDelete(Discount, { category: id });
+    await em.nativeDelete(Category, { id });
+    await em.flush();
     res.status(200).json({ message: 'Category deleted', data: category });
   } catch (err: any) {
     next(err);
