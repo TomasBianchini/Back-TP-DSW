@@ -15,7 +15,7 @@ export const router = Router();
 
 router.use('/categories', categoryRouter);
 router.use('/discounts', discountRouter);
-router.use('/payment_types', payment_typeRouter);
+router.use('/payment-types', payment_typeRouter);
 router.use('/users', userRouter);
 router.use('/sellers', sellerRouter);
 router.use('/products', productRouter);

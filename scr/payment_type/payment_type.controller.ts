@@ -19,7 +19,10 @@ async function findAll(req: Request, res: Response, next: NextFunction) {
 async function findOne(req: Request, res: Response, next: NextFunction) {
   try {
     const id = req.params.id;
-    const payment_type = await em.findOneOrFail(PaymentType, { id });
+    const payment_type = await em.findOne(PaymentType, { id });
+    if (!payment_type) {
+      return res.status(404).json({ message: 'Payment type not found' });
+    }
     res.status(200).json({ message: 'Found payment type', data: payment_type });
   } catch (error: any) {
     next(error);
@@ -44,7 +47,10 @@ async function add(req: Request, res: Response, next: NextFunction) {
 async function update(req: Request, res: Response, next: NextFunction) {
   try {
     const id = req.params.id;
-    const payment_typeToUpdate = await em.findOneOrFail(PaymentType, { id });
+    const payment_typeToUpdate = await em.findOne(PaymentType, { id });
+    if (!payment_typeToUpdate) {
+      return res.status(404).json({ message: 'Payment type not found' });
+    }
     em.assign(payment_typeToUpdate, req.body);
     await em.flush();
     res
