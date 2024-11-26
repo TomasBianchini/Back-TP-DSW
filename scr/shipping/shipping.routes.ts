@@ -7,6 +7,7 @@ import {
 } from './shipping.controller.js';
 import { Router } from 'express';
 import { auth, isAdmin } from '../middlewares/auth.js';
+import ErrorHandler from '../middlewares/ErrorHandler.js';
 export const shippingRouter = Router();
 
 shippingRouter.get('/', auth, findAll);
@@ -20,3 +21,4 @@ shippingRouter.put('/:id', isAdmin, update);
 shippingRouter.patch('/:id', isAdmin, update);
 
 shippingRouter.delete('/:id', isAdmin, remove);
+shippingRouter.use(ErrorHandler);

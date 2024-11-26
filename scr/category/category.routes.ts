@@ -7,6 +7,7 @@ import {
   remove,
 } from './category.controller.js';
 import { auth, isAdmin } from '../middlewares/auth.js';
+import ErrorHandler from '../middlewares/ErrorHandler.js';
 
 export const categoryRouter = Router();
 
@@ -19,3 +20,4 @@ categoryRouter.put('/:id', isAdmin, update);
 categoryRouter.patch('/:id', isAdmin, update);
 
 categoryRouter.delete('/:id', isAdmin, remove);
+categoryRouter.use(ErrorHandler);
