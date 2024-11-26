@@ -10,7 +10,8 @@ async function auth(req: Request, res: Response, next: NextFunction) {
     if (!realToken) {
       return res.status(401).json({ message: 'Unauthorized' });
     }
-    jwt.verify(realToken, key!);
+    const decode: any = jwt.verify(realToken, key!);
+    res.locals.user = decode.user.id;
     next();
   } catch (error: any) {
     return res.status(401).json({ message: 'Invalid token' });
@@ -29,6 +30,7 @@ async function isAdmin(req: Request, res: Response, next: NextFunction) {
     if (user.type !== 'Admin') {
       return res.status(401).json({ message: 'Unauthorized' });
     }
+    res.locals.user = decode.user.id;
     next();
   } catch (error: any) {
     return res.status(401).json({ message: 'Invalid token' });
@@ -51,6 +53,7 @@ async function isSeller(req: Request, res: Response, next: NextFunction) {
     if (user.type !== 'Seller') {
       return res.status(401).json({ message: 'Unauthorized' });
     }
+    res.locals.user = decode.user.id;
     next();
   } catch (error: any) {
     return res.status(401).json({ message: 'Invalid token' });

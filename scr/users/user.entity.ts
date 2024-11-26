@@ -4,9 +4,9 @@ import {
   Entity,
   EventArgs,
   Property,
-} from "@mikro-orm/core";
-import { BaseEntity } from "../shared/db/baseEntity.entity.js";
-import { hash, verify } from "argon2";
+} from '@mikro-orm/core';
+import { BaseEntity } from '../shared/db/baseEntity.entity.js';
+import { hash, verify } from 'argon2';
 
 @Entity()
 export class User extends BaseEntity {
@@ -16,17 +16,17 @@ export class User extends BaseEntity {
   @Property({ nullable: false, unique: true })
   email!: string;
 
-  @Property({ nullable: false })
+  @Property({ nullable: false, hidden: true })
   password!: string;
 
   @Property({ nullable: false })
   address!: string;
 
   @Property({ nullable: false })
-  type!: "Admin" | "User" | "Seller";
+  type!: 'Admin' | 'User' | 'Seller';
 
   @Property({ nullable: false })
-  state!: "Active" | "Archived";
+  state!: 'Active' | 'Archived';
 
   @BeforeCreate()
   @BeforeUpdate()

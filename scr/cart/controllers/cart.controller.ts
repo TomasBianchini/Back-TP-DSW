@@ -8,7 +8,8 @@ const em = orm.em;
 
 async function findAll(req: Request, res: Response) {
   try {
-    const filter: CartFilter = req.query;
+    const user = res.locals.user;
+    const filter: CartFilter = { user, ...req.query };
     const carts = await em.find(Cart, filter, {
       populate: [
         'orders',
