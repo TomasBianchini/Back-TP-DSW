@@ -30,9 +30,10 @@ async function findAll(req: Request, res: Response) {
 async function findOne(req: Request, res: Response) {
   try {
     const id = req.params.id;
-    const cart = await em.findOneOrFail(
+    const user = res.locals.user;
+    const cart = await em.findOne(
       Cart,
-      { id },
+      { id, user },
       {
         populate: [
           'orders',
@@ -44,6 +45,9 @@ async function findOne(req: Request, res: Response) {
         ],
       }
     );
+    if (!cart) {
+      return res.status(404).json({ message: 'Cart not found' });
+    }
     res.status(200).json({ message: 'Found cart', data: cart });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -52,6 +56,11 @@ async function findOne(req: Request, res: Response) {
 
 async function add(req: Request, res: Response) {
   try {
+    const user = res.locals.user;
+    const existingCart = await em.findOne(Cart, { user, state: 'Pending' });
+    if (existingCart) {
+      return res.status(400).json({ message: 'There is a cart pending' });
+    }
     const cart = em.create(Cart, req.body);
     await em.flush();
     res.status(201).json({ message: 'Cart created', data: cart });
@@ -89,11 +98,14 @@ async function remove(req: Request, res: Response) {
 async function cancelCart(req: Request, res: Response) {
   try {
     const id = req.params.id;
-    const cart = await em.findOneOrFail(
+    const cart = await em.findOne(
       Cart,
       { id },
       { populate: ['shipping', 'orders', 'orders.product'] }
     );
+    if (!cart) {
+      return res.status(404).json({ message: 'Cart not found' });
+    }
     const currentDate = new Date();
     const cartUpdatedAt = new Date(cart.updatedAt ?? new Date());
     const timeDifference = currentDate.valueOf() - cartUpdatedAt.valueOf();
