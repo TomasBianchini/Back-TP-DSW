@@ -8,7 +8,7 @@ const em = orm.em;
 
 async function findAll(req: Request, res: Response) {
   try {
-    const category = req.params.id || undefined;
+    const category = req.params.category_id || undefined;
     const filter: DiscountFilter = { ...req.query };
     if (category) {
       filter.category = category;
@@ -25,11 +25,14 @@ async function findAll(req: Request, res: Response) {
 async function findOne(req: Request, res: Response) {
   try {
     const id = req.params.id;
-    const discount = await em.findOneOrFail(
+    const discount = await em.findOne(
       Discount,
       { id },
       { populate: ['category'] }
     );
+    if (!discount) {
+      return res.status(404).json({ message: 'Discount not found' });
+    }
     res.status(200).json({ message: 'Found discount', data: discount });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -38,7 +41,7 @@ async function findOne(req: Request, res: Response) {
 
 async function add(req: Request, res: Response) {
   try {
-    const category = req.params.id;
+    const category = req.params.category_id;
     const validationResult = validateDiscount(req.body);
     if (!validationResult.success) {
       return res.status(400).json({ message: validationResult.error.message });

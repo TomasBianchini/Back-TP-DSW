@@ -22,6 +22,6 @@ categoryRouter.patch('/:id', isAdmin, update);
 
 categoryRouter.delete('/:id', isAdmin, remove);
 
-categoryRouter.use('/:id/discounts', discountRouter);
+categoryRouter.use('/:category_id/discounts', discountRouter);
 
 categoryRouter.use(ErrorHandler);
