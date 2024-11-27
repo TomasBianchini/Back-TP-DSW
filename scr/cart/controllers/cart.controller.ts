@@ -4,6 +4,8 @@ import { Cart } from '../entities/cart.entity.js';
 import { CartFilter } from '../cart.filter.js';
 import { Product } from '../../product/product.entity.js';
 import { updateOrders } from '../services/order.service.js';
+import { validateCart } from '../schemas/cart.schema.js';
+import { Order } from '../entities/order.entity.js';
 const em = orm.em;
 
 async function findAll(req: Request, res: Response) {
@@ -61,7 +63,13 @@ async function add(req: Request, res: Response) {
     if (existingCart) {
       return res.status(400).json({ message: 'There is a cart pending' });
     }
-    const cart = em.create(Cart, req.body);
+    const cartToCreate: Cart = { ...req.body, user, state: 'Pending' };
+    console.log(cartToCreate);
+    const validationResult = validateCart(cartToCreate);
+    if (!validationResult.success) {
+      return res.status(400).json({ message: validationResult.error.message });
+    }
+    const cart = em.create(Cart, cartToCreate);
     await em.flush();
     res.status(201).json({ message: 'Cart created', data: cart });
   } catch (error: any) {
@@ -86,10 +94,17 @@ async function update(req: Request, res: Response) {
 async function remove(req: Request, res: Response) {
   try {
     const id = req.params.id;
-    const cartToRemove = await em.findOneOrFail(Cart, { id });
-    em.remove(cartToRemove);
+    const cartToRemove = await em.findOne(Cart, { id });
+    if (!cartToRemove) {
+      return res.status(404).json({ message: 'Cart not found' });
+    }
+    if (!cartToRemove.isPending()) {
+      return res.status(400).json({ message: 'The cart is not pending' });
+    }
+    await em.nativeDelete(Order, { cart: id });
+    await em.nativeDelete(Cart, { id });
     await em.flush();
-    res.status(200).json({ message: 'Order removed', data: cartToRemove });
+    res.status(200).json({ message: 'Cart removed', data: cartToRemove });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
