@@ -34,4 +34,8 @@ export class Cart extends BaseEntity {
 
   @ManyToOne(() => Shipping, { nullable: true })
   shipping!: Shipping | null;
+
+  isPending() {
+    return this.state === 'Pending';
+  }
 }

@@ -24,11 +24,10 @@ async function findAll(req: Request, res: Response) {
 async function findOne(req: Request, res: Response) {
   try {
     const id = req.params.id;
-    const order = await em.findOneOrFail(
-      Order,
-      { id },
-      { populate: ['product'] }
-    );
+    const order = await em.findOne(Order, { id }, { populate: ['product'] });
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
     res.status(200).json({ message: 'Found order', data: order });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -38,7 +37,8 @@ async function findOne(req: Request, res: Response) {
 async function add(req: Request, res: Response) {
   try {
     const cartId = req.params.cart_id;
-    const validationResult = validateOrder(req.body);
+    const user = res.locals.user;
+    const validationResult = validateOrder({ ...req.body, cart: cartId });
     if (!validationResult.success) {
       return res.status(400).json({ message: validationResult.error.message });
     }
@@ -51,7 +51,7 @@ async function add(req: Request, res: Response) {
     }
     let cart = await em.findOne(Cart, {
       id: cartId,
-      user: req.body.user,
+      user: user,
       state: 'Pending',
     });
     if (!cart) {
@@ -74,6 +74,7 @@ async function add(req: Request, res: Response) {
   }
 }
 
+//TODO use cart service to update cart total, check if the cart is pending and if the product is available
 async function update(req: Request, res: Response) {
   try {
     const id = req.params.id;

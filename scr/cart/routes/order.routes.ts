@@ -7,7 +7,7 @@ import {
 } from '../controllers/order.controller.js';
 import { Router } from 'express';
 import { auth } from '../../middlewares/auth.js';
-export const orderRouter = Router();
+export const orderRouter = Router({ mergeParams: true });
 
 orderRouter.get('/', auth, findAll);
 orderRouter.get('/:id', auth, findOne);

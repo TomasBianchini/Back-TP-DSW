@@ -23,4 +23,4 @@ cartRouter.patch('/:id/cancel', auth, cancelCart);
 
 cartRouter.delete('/:id', auth, remove);
 
-cartRouter.use('/:id/order', orderRouter);
+cartRouter.use('/:cart_id/orders', orderRouter);
