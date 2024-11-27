@@ -37,6 +37,9 @@ async function findOne(req: Request, res: Response) {
 async function add(req: Request, res: Response) {
   try {
     const cartId = req.params.cart_id;
+    if (!cartId) {
+      return res.status(400).json({ message: 'Cart id is required' });
+    }
     const user = res.locals.user;
     const validationResult = validateOrder({ ...req.body, cart: cartId });
     if (!validationResult.success) {
@@ -74,11 +77,18 @@ async function add(req: Request, res: Response) {
   }
 }
 
-//TODO use cart service to update cart total, check if the cart is pending and if the product is available
 async function update(req: Request, res: Response) {
   try {
-    const id = req.params.id;
-    const orderToUpdate = await em.findOneOrFail(Order, { id });
+    const id: string = req.params.id;
+    const cartId: string = req.params.cart_id;
+    const cart = await em.findOne(Cart, { id: cartId, state: 'Pending' });
+    if (!cart) {
+      return res.status(404).json({ message: 'Cart not found' });
+    }
+    const orderToUpdate = await em.findOne(Order, { id });
+    if (!orderToUpdate) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
     em.assign(orderToUpdate, req.body);
     await em.flush();
     res.status(200).json({ message: 'Order updated', data: orderToUpdate });

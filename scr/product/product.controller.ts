@@ -45,8 +45,8 @@ async function add(req: Request, res: Response) {
     if (!validationResult.success) {
       return res.status(400).json({ message: validationResult.error.message });
     }
-    const id = validationResult.data.seller;
-    const seller = await em.findOne(Seller, { id });
+    const sellerId = res.locals.user;
+    const seller = await em.findOne(Seller, { id: sellerId });
     if (!seller) {
       return res.status(404).json({ message: 'Seller not found' });
     }
@@ -61,7 +61,11 @@ async function add(req: Request, res: Response) {
 async function update(req: Request, res: Response) {
   try {
     const id = req.params.id;
-    const productToUpdate = await em.findOneOrFail(Product, { id });
+    const sellerId = res.locals.user;
+    const productToUpdate = await em.findOne(Product, { id, seller: sellerId });
+    if (!productToUpdate) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
     em.assign(productToUpdate, req.body);
     await em.flush();
     res.status(200).json({ message: 'Product updated', data: productToUpdate });
@@ -73,7 +77,8 @@ async function update(req: Request, res: Response) {
 async function remove(req: Request, res: Response) {
   try {
     const id = req.params.id;
-    const productToRemove = await em.findOne(Product, { id });
+    const sellerId = res.locals.user;
+    const productToRemove = await em.findOne(Product, { id, seller: sellerId });
     if (!productToRemove) {
       return res.status(404).json({ message: 'Product not found' });
     }
