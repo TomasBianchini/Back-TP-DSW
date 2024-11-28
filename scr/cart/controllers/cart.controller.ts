@@ -6,6 +6,7 @@ import { Product } from '../../product/product.entity.js';
 import { updateOrders } from '../services/order.service.js';
 import { validateCart } from '../schemas/cart.schema.js';
 import { Order } from '../entities/order.entity.js';
+import { calculateTotal } from '../services/cart.service.js';
 const em = orm.em;
 
 async function findAll(req: Request, res: Response) {
@@ -64,7 +65,6 @@ async function add(req: Request, res: Response) {
       return res.status(400).json({ message: 'There is a cart pending' });
     }
     const cartToCreate: Cart = { ...req.body, user, state: 'Pending' };
-    console.log(cartToCreate);
     const validationResult = validateCart(cartToCreate);
     if (!validationResult.success) {
       return res.status(400).json({ message: validationResult.error.message });
@@ -79,11 +79,17 @@ async function add(req: Request, res: Response) {
 async function update(req: Request, res: Response) {
   try {
     const id = req.params.id;
+    const user = res.locals.user;
     const cart: Cart = req.body;
+    const validationResult = validateCart(cart);
+    if (!validationResult.success) {
+      return res.status(400).json({ message: validationResult.error.message });
+    }
     const ordersArray = Array.from(cart.orders);
     await updateOrders(ordersArray);
     const cartToUpdate = await em.findOneOrFail(Cart, { id });
-    em.assign(cartToUpdate, req.body);
+    let total: number = await calculateTotal(cartToUpdate);
+    em.assign(cartToUpdate, { ...cart, total, user });
     await em.flush();
     res.status(200).json({ message: 'Order updated', data: cartToUpdate });
   } catch (error: any) {
@@ -121,31 +127,24 @@ async function cancelCart(req: Request, res: Response) {
     if (!cart) {
       return res.status(404).json({ message: 'Cart not found' });
     }
-    const currentDate = new Date();
-    const cartUpdatedAt = new Date(cart.updatedAt ?? new Date());
-    const timeDifference = currentDate.valueOf() - cartUpdatedAt.valueOf();
-    const hoursDifference = timeDifference / (1000 * 3600);
-    if (
-      cart.shipping &&
-      cart.shipping.cancellationDeadline &&
-      hoursDifference > cart.shipping.cancellationDeadline
-    ) {
-      throw new Error("The cart can't be cancelled");
-    }
-    for (const order of cart.orders) {
-      let productId: string;
-      if (typeof order.product === 'string') {
-        productId = order.product;
-      } else {
-        productId = order.product.id as string;
+    if (cart.isCompleted() && cart.isCancelable()) {
+      for (const order of cart.orders) {
+        let productId: string;
+        if (typeof order.product === 'string') {
+          productId = order.product;
+        } else {
+          productId = order.product.id as string;
+        }
+        const product = await em.findOneOrFail(Product, { id: productId });
+        product.stock += order.quantity;
+        await em.persistAndFlush(product);
       }
-      const product = await em.findOneOrFail(Product, { id: productId });
-      product.stock += order.quantity;
-      await em.persistAndFlush(product);
+      cart.state = 'Canceled';
+      await em.flush();
+      res.status(200).json({ message: 'Cart canceled', data: cart });
+    } else {
+      res.status(400).json({ message: 'The cart is not cancelable' });
     }
-    cart.state = 'Canceled';
-    await em.flush();
-    res.status(200).json({ message: 'Cart canceled', data: cart });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }

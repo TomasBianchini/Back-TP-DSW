@@ -4,6 +4,7 @@ import { validateProduct } from './product.schema.js';
 import { Request, Response } from 'express';
 import { ProductFilter } from './product.filter.js';
 import { Seller } from '../users/seller.entity.js';
+import { filterData } from './product.service.js';
 
 const em = orm.em;
 
@@ -88,20 +89,6 @@ async function remove(req: Request, res: Response) {
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
-}
-
-async function filterData(products: Product[]) {
-  const filteredProducts = products.map((product) => {
-    const discounts = product.category?.discounts || [];
-    const filteredDiscounts = discounts.filter((discount) =>
-      discount.isActive()
-    );
-    return {
-      ...product,
-      category: { ...product.category, discounts: filteredDiscounts },
-    };
-  });
-  return filteredProducts;
 }
 
 export { findAll, findOne, add, update, remove };
