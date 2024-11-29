@@ -5,7 +5,7 @@ import { userRouter } from './users/user.routes.js';
 import { productRouter } from './product/product.routes.js';
 import { sellerRouter } from './users/seller.routes.js';
 import { loginRouter } from './users/login.routes.js';
-import { reviewRouter } from './product/review.routes.js';
+import { reviewRouter } from './review/review.routes.js';
 import { orderRouter } from './order/order.routes.js';
 import { cartRouter } from './cart/cart.routes.js';
 import { shippingRouter } from './shipping/shipping.routes.js';

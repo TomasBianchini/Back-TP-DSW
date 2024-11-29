@@ -22,7 +22,7 @@ async function findAll(req: Request, res: Response, next: NextFunction) {
 async function findOne(req: Request, res: Response, next: NextFunction) {
   try {
     const id = req.params.id;
-    const category = await em.findOne(
+    const category = await em.findOneOrFail(
       Category,
       { id },
       { populate: ['discounts'] }
@@ -39,9 +39,6 @@ async function findOne(req: Request, res: Response, next: NextFunction) {
 async function add(req: Request, res: Response, next: NextFunction) {
   try {
     const validationResult = validateCategory(req.body);
-    if (!validationResult.success) {
-      return res.status(400).json({ message: validationResult.error.message });
-    }
     const category = em.create(Category, validationResult.data);
     await em.flush();
     res.status(201).json({ message: 'Category created', data: category });
