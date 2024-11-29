@@ -1,4 +1,6 @@
-import zod from "zod";
+import zod from 'zod';
+import { friendlyMessage } from '../utils/schemas.utils.js';
+import { ValidationError } from '../shared/constants/errors.js';
 
 const orderSchema = zod.object({
   subtotal: zod.number(),
@@ -8,5 +10,10 @@ const orderSchema = zod.object({
 });
 
 export function validateOrder(data: any) {
-  return orderSchema.safeParse(data);
+  const result = orderSchema.safeParse(data);
+  if (!result.success) {
+    const message = friendlyMessage(result);
+    throw new ValidationError(message);
+  }
+  return result;
 }
