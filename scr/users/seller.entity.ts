@@ -4,9 +4,9 @@ import {
   Entity,
   OneToMany,
   Property,
-} from "@mikro-orm/core";
-import { User } from "./user.entity.js";
-import { Product } from "../product/product.entity.js";
+} from '@mikro-orm/core';
+import { User } from './user.entity.js';
+import { Product } from '../product/product.entity.js';
 
 @Entity()
 export class Seller extends User {

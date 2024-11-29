@@ -39,4 +39,12 @@ export class User extends BaseEntity {
   async verifyPassword(password: string) {
     return verify(this.password, password);
   }
+
+  isAdmin() {
+    return this.type === 'Admin';
+  }
+
+  isSeller() {
+    return this.type === 'Seller';
+  }
 }
