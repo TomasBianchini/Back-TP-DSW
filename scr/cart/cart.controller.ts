@@ -1,5 +1,5 @@
 import { orm } from '../shared/db/orm.js';
-import { Response, Request } from 'express';
+import { Response, Request, NextFunction } from 'express';
 import { Cart } from './cart.entity.js';
 import { CartFilter } from './cart.filter.js';
 import { Product } from '../product/product.entity.js';
@@ -9,7 +9,7 @@ import { Order } from '../order/order.entity.js';
 import { calculateTotal } from './cart.service.js';
 const em = orm.em;
 
-async function findAll(req: Request, res: Response) {
+async function findAll(req: Request, res: Response, next: NextFunction) {
   try {
     const user = res.locals.user;
     const filter: CartFilter = { user, ...req.query };
@@ -25,12 +25,12 @@ async function findAll(req: Request, res: Response) {
     });
 
     res.status(200).json({ message: 'Found all carts', data: carts });
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
+  } catch (err: any) {
+    next(err);
   }
 }
 
-async function findOne(req: Request, res: Response) {
+async function findOne(req: Request, res: Response, next: NextFunction) {
   try {
     const id = req.params.id;
     const user = res.locals.user;
@@ -48,16 +48,13 @@ async function findOne(req: Request, res: Response) {
         ],
       }
     );
-    if (!cart) {
-      return res.status(404).json({ message: 'Cart not found' });
-    }
     res.status(200).json({ message: 'Found cart', data: cart });
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
+  } catch (err: any) {
+    next(err);
   }
 }
 
-async function add(req: Request, res: Response) {
+async function add(req: Request, res: Response, next: NextFunction) {
   try {
     const user = res.locals.user;
     const existingCart = await em.findOne(Cart, { user, state: 'Pending' });
@@ -65,26 +62,20 @@ async function add(req: Request, res: Response) {
       return res.status(400).json({ message: 'There is a cart pending' });
     }
     const cartToCreate: Cart = { ...req.body, user, state: 'Pending' };
-    const validationResult = validateCart(cartToCreate);
-    if (!validationResult.success) {
-      return res.status(400).json({ message: validationResult.error.message });
-    }
+    validateCart(cartToCreate);
     const cart = em.create(Cart, cartToCreate);
     await em.flush();
     res.status(201).json({ message: 'Cart created', data: cart });
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
+  } catch (err: any) {
+    next(err);
   }
 }
-async function update(req: Request, res: Response) {
+async function update(req: Request, res: Response, next: NextFunction) {
   try {
     const id = req.params.id;
     const user = res.locals.user;
     const cart: Cart = req.body;
     const validationResult = validateCart(cart);
-    if (!validationResult.success) {
-      return res.status(400).json({ message: validationResult.error.message });
-    }
     const ordersArray = Array.from(cart.orders);
     await updateOrders(ordersArray);
     const cartToUpdate = await em.findOneOrFail(Cart, { id });
@@ -92,18 +83,15 @@ async function update(req: Request, res: Response) {
     em.assign(cartToUpdate, { ...cart, total, user });
     await em.flush();
     res.status(200).json({ message: 'Order updated', data: cartToUpdate });
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
+  } catch (err: any) {
+    next(err);
   }
 }
 
-async function remove(req: Request, res: Response) {
+async function remove(req: Request, res: Response, next: NextFunction) {
   try {
     const id = req.params.id;
-    const cartToRemove = await em.findOne(Cart, { id });
-    if (!cartToRemove) {
-      return res.status(404).json({ message: 'Cart not found' });
-    }
+    const cartToRemove = await em.findOneOrFail(Cart, { id });
     if (!cartToRemove.isPending()) {
       return res.status(400).json({ message: 'The cart is not pending' });
     }
@@ -111,22 +99,19 @@ async function remove(req: Request, res: Response) {
     await em.nativeDelete(Cart, { id });
     await em.flush();
     res.status(200).json({ message: 'Cart removed', data: cartToRemove });
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
+  } catch (err: any) {
+    next(err);
   }
 }
 
-async function cancelCart(req: Request, res: Response) {
+async function cancelCart(req: Request, res: Response, next: NextFunction) {
   try {
     const id = req.params.id;
-    const cart = await em.findOne(
+    const cart = await em.findOneOrFail(
       Cart,
       { id },
       { populate: ['shipping', 'orders', 'orders.product'] }
     );
-    if (!cart) {
-      return res.status(404).json({ message: 'Cart not found' });
-    }
     if (cart.isCompleted() && cart.isCancelable()) {
       for (const order of cart.orders) {
         let productId: string;
@@ -145,8 +130,8 @@ async function cancelCart(req: Request, res: Response) {
     } else {
       res.status(400).json({ message: 'The cart is not cancelable' });
     }
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
+  } catch (err: any) {
+    next(err);
   }
 }
 

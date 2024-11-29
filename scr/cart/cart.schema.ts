@@ -1,4 +1,6 @@
 import zod from 'zod';
+import { friendlyMessage } from '../utils/schemas.utils.js';
+import { ValidationError } from '../shared/constants/errors.js';
 
 const cartSchema = zod.object({
   user: zod.string(),
@@ -21,5 +23,10 @@ const cartSchema = zod.object({
 });
 
 export function validateCart(data: any) {
-  return cartSchema.safeParse(data);
+  const result = cartSchema.safeParse(data);
+  if (!result.success) {
+    const message = friendlyMessage(result);
+    throw new ValidationError(message);
+  }
+  return result;
 }
