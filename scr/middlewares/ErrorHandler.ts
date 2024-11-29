@@ -3,6 +3,8 @@ import {
   NotFoundError,
   UniqueConstraintViolationException,
 } from '@mikro-orm/core';
+import jsonwebtoken from 'jsonwebtoken';
+const { TokenExpiredError, JsonWebTokenError } = jsonwebtoken;
 import { HttpStatus } from '../shared/constants/HttpStatus.js';
 import {
   ValidationError,
@@ -40,6 +42,17 @@ const ErrorHandler = (
     return res
       .status(HttpStatus.CONFLICT)
       .json({ message: 'A unique constraint violation occurred.' });
+  }
+
+  if (err instanceof TokenExpiredError) {
+    return res.status(HttpStatus.UNAUTHORIZED).json({
+      message: err.message,
+    });
+  }
+  if (err instanceof JsonWebTokenError) {
+    return res.status(HttpStatus.UNAUTHORIZED).json({
+      message: err.message,
+    });
   }
 
   if (err.code === 23503) {
