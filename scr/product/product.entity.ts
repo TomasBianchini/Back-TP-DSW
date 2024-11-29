@@ -6,11 +6,11 @@ import {
   OneToMany,
   Collection,
   Cascade,
-} from "@mikro-orm/core";
-import { BaseEntity } from "../shared/db/baseEntity.entity.js";
-import { Category } from "../category/category.entity.js";
-import { Seller } from "../users/seller.entity.js";
-import { Review } from "./review.entity.js";
+} from '@mikro-orm/core';
+import { BaseEntity } from '../shared/db/baseEntity.entity.js';
+import { Category } from '../category/category.entity.js';
+import { Seller } from '../users/seller.entity.js';
+import { Review } from '../review/review.entity.js';
 @Entity()
 export class Product extends BaseEntity {
   @Property({ nullable: false })
@@ -29,7 +29,7 @@ export class Product extends BaseEntity {
   img_url!: string;
 
   @Property({ nullable: false })
-  state!: "Active" | "Archived";
+  state!: 'Active' | 'Archived';
 
   @ManyToOne(() => Category, { nullable: false })
   category!: Rel<Category>;
@@ -42,9 +42,9 @@ export class Product extends BaseEntity {
   })
   reviews = new Collection<Review>(this);
   isActive() {
-    return this.state === "Active" ? true : false;
+    return this.state === 'Active' ? true : false;
   }
-  
+
   isAvailable(quantity: number) {
     return this.stock >= quantity ? true : false;
   }

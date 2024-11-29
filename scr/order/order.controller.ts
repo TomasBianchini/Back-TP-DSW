@@ -1,7 +1,7 @@
 import { Response, Request } from 'express';
 import { orm } from '../shared/db/orm.js';
 import { Order } from './order.entity.js';
-import { validateOrder } from '../schemas/order.schema.js';
+import { validateOrder } from './order.schema.js';
 import { Product } from '../product/product.entity.js';
 import { Cart } from '../cart/cart.entity.js';
 import { checkProductAvailability } from '../product/product.service.js';

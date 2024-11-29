@@ -1,6 +1,6 @@
-import { Entity, ManyToOne, Property, Rel } from "@mikro-orm/core";
-import { BaseEntity } from "../shared/db/baseEntity.entity.js";
-import { Product } from "./product.entity.js";
+import { Entity, ManyToOne, Property, Rel } from '@mikro-orm/core';
+import { BaseEntity } from '../shared/db/baseEntity.entity.js';
+import { Product } from '../product/product.entity.js';
 
 @Entity()
 export class Review extends BaseEntity {
@@ -11,7 +11,7 @@ export class Review extends BaseEntity {
   comment!: string;
 
   @Property({ nullable: false })
-  state!: "Active" | "Archived";
+  state!: 'Active' | 'Archived';
 
   @ManyToOne(() => Product, { nullable: false })
   product!: Rel<Product>;
