@@ -1,8 +1,8 @@
-import { Order } from '../entities/order.entity.js';
-import { Product } from '../../product/product.entity.js';
-import { validateOrder } from '../schemas/order.schema.js';
-import { orm } from '../../shared/db/orm.js';
-import { checkProductAvailability } from '../../product/product.service.js';
+import { Order } from './order.entity.js';
+import { Product } from '../product/product.entity.js';
+import { validateOrder } from './order.schema.js';
+import { orm } from '../shared/db/orm.js';
+import { checkProductAvailability } from '../product/product.service.js';
 
 const em = orm.em;
 

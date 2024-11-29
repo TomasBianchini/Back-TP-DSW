@@ -8,7 +8,7 @@ import {
 } from './category.controller.js';
 import { auth, isAdmin } from '../middlewares/auth.js';
 import ErrorHandler from '../middlewares/ErrorHandler.js';
-import { discountRouter } from './discount.routes.js';
+import { discountRouter } from '../discount/discount.routes.js';
 
 export const categoryRouter = Router();
 

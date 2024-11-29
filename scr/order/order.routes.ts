@@ -1,12 +1,6 @@
-import {
-  findAll,
-  findOne,
-  add,
-  update,
-  remove,
-} from '../controllers/order.controller.js';
+import { findAll, findOne, add, update, remove } from './order.controller.js';
 import { Router } from 'express';
-import { auth } from '../../middlewares/auth.js';
+import { auth } from '../middlewares/auth.js';
 export const orderRouter = Router({ mergeParams: true });
 
 orderRouter.get('/', auth, findAll);

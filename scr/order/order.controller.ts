@@ -1,10 +1,10 @@
 import { Response, Request } from 'express';
-import { orm } from '../../shared/db/orm.js';
-import { Order } from '../entities/order.entity.js';
+import { orm } from '../shared/db/orm.js';
+import { Order } from './order.entity.js';
 import { validateOrder } from '../schemas/order.schema.js';
-import { Product } from '../../product/product.entity.js';
-import { Cart } from '../entities/cart.entity.js';
-import { checkProductAvailability } from '../../product/product.service.js';
+import { Product } from '../product/product.entity.js';
+import { Cart } from '../cart/cart.entity.js';
+import { checkProductAvailability } from '../product/product.service.js';
 const em = orm.em;
 
 async function findAll(req: Request, res: Response) {

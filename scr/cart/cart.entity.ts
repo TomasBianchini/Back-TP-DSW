@@ -7,11 +7,11 @@ import {
   Collection,
 } from '@mikro-orm/core';
 
-import { BaseEntity } from '../../shared/db/baseEntity.entity.js';
-import { User } from '../../users/user.entity.js';
-import { PaymentType } from '../../payment_type/payment_type.entity.js';
-import { Shipping } from '../../shipping/shipping.entity.js';
-import { Order } from './order.entity.js';
+import { BaseEntity } from '../shared/db/baseEntity.entity.js';
+import { User } from '../users/user.entity.js';
+import { PaymentType } from '../payment_type/payment_type.entity.js';
+import { Shipping } from '../shipping/shipping.entity.js';
+import { Order } from '../order/order.entity.js';
 
 @Entity()
 export class Cart extends BaseEntity {

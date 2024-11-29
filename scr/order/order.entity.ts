@@ -1,10 +1,10 @@
 import { Entity, Property, ManyToOne, Reference } from '@mikro-orm/core';
 
-import { BaseEntity } from '../../shared/db/baseEntity.entity.js';
+import { BaseEntity } from '../shared/db/baseEntity.entity.js';
 
-import { Product } from '../../product/product.entity.js';
+import { Product } from '../product/product.entity.js';
 
-import { Cart } from './cart.entity.js';
+import { Cart } from '../cart/cart.entity.js';
 @Entity()
 export class Order extends BaseEntity {
   @Property({ nullable: false })

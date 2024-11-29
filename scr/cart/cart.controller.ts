@@ -1,12 +1,12 @@
-import { orm } from '../../shared/db/orm.js';
+import { orm } from '../shared/db/orm.js';
 import { Response, Request } from 'express';
-import { Cart } from '../entities/cart.entity.js';
-import { CartFilter } from '../cart.filter.js';
-import { Product } from '../../product/product.entity.js';
-import { updateOrders } from '../services/order.service.js';
-import { validateCart } from '../schemas/cart.schema.js';
-import { Order } from '../entities/order.entity.js';
-import { calculateTotal } from '../services/cart.service.js';
+import { Cart } from './cart.entity.js';
+import { CartFilter } from './cart.filter.js';
+import { Product } from '../product/product.entity.js';
+import { updateOrders } from '../order/order.service.js';
+import { validateCart } from './cart.schema.js';
+import { Order } from '../order/order.entity.js';
+import { calculateTotal } from './cart.service.js';
 const em = orm.em;
 
 async function findAll(req: Request, res: Response) {

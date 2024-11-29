@@ -6,7 +6,7 @@ import {
   Collection,
 } from '@mikro-orm/core';
 import { BaseEntity } from '../shared/db/baseEntity.entity.js';
-import { Discount } from './discount.entity.js';
+import { Discount } from '../discount/discount.entity.js';
 
 @Entity()
 export class Category extends BaseEntity {

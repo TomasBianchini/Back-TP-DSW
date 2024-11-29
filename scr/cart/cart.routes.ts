@@ -6,9 +6,9 @@ import {
   update,
   remove,
   cancelCart,
-} from '../controllers/cart.controller.js';
-import { auth } from '../../middlewares/auth.js';
-import { orderRouter } from './order.routes.js';
+} from './cart.controller.js';
+import { auth } from '../middlewares/auth.js';
+import { orderRouter } from '../order/order.routes.js';
 export const cartRouter = Router();
 
 cartRouter.get('/', auth, findAll);

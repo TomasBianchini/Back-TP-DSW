@@ -1,4 +1,4 @@
-import { Cart } from '../entities/cart.entity';
+import { Cart } from './cart.entity';
 
 async function calculateTotal(cart: Cart): Promise<number> {
   let total: number = 0;

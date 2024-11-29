@@ -1,6 +1,6 @@
 import { Entity, Property, ManyToOne, Rel } from '@mikro-orm/core';
 import { BaseEntity } from '../shared/db/baseEntity.entity.js';
-import { Category } from './category.entity.js';
+import { Category } from '../category/category.entity.js';
 
 @Entity()
 export class Discount extends BaseEntity {

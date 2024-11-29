@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from 'express';
 import { orm } from '../shared/db/orm.js';
 import { validateCategory } from './category.schema.js';
 import { populate } from 'dotenv';
-import { Discount } from './discount.entity.js';
+import { Discount } from '../discount/discount.entity.js';
 
 const em = orm.em;
 async function findAll(req: Request, res: Response, next: NextFunction) {

@@ -1,13 +1,13 @@
 import { categoryRouter } from './category/category.routes.js';
-import { discountRouter } from './category/discount.routes.js';
+import { discountRouter } from './discount/discount.routes.js';
 import { payment_typeRouter } from './payment_type/payment_type.routes.js';
 import { userRouter } from './users/user.routes.js';
 import { productRouter } from './product/product.routes.js';
 import { sellerRouter } from './users/seller.routes.js';
 import { loginRouter } from './users/login.routes.js';
 import { reviewRouter } from './product/review.routes.js';
-import { orderRouter } from './cart/routes/order.routes.js';
-import { cartRouter } from './cart/routes/cart.routes.js';
+import { orderRouter } from './order/order.routes.js';
+import { cartRouter } from './cart/cart.routes.js';
 import { shippingRouter } from './shipping/shipping.routes.js';
 import { Router } from 'express';
 
