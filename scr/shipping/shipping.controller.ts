@@ -17,10 +17,7 @@ async function findAll(req: Request, res: Response, next: NextFunction) {
 async function findOne(req: Request, res: Response, next: NextFunction) {
   try {
     const id = req.params.id;
-    const shipping = await em.findOne(Shipping, { id });
-    if (!shipping) {
-      return res.status(404).json({ message: 'Shipping not found' });
-    }
+    const shipping = await em.findOneOrFail(Shipping, { id });
     res.status(200).json({ message: 'Found shipping', data: shipping });
   } catch (error: any) {
     next(error);
@@ -30,9 +27,6 @@ async function findOne(req: Request, res: Response, next: NextFunction) {
 async function add(req: Request, res: Response, next: NextFunction) {
   try {
     const validationRsult = validateShipping(req.body);
-    if (!validationRsult.success) {
-      return res.status(400).json({ message: validationRsult.error.message });
-    }
     const shipping = em.create(Shipping, validationRsult.data);
     await em.flush();
     res.status(201).json({ message: 'Shipping created', data: shipping });
@@ -44,10 +38,7 @@ async function add(req: Request, res: Response, next: NextFunction) {
 async function update(req: Request, res: Response, next: NextFunction) {
   try {
     const id = req.params.id;
-    const shippingToUpdate = await em.findOne(Shipping, { id });
-    if (!shippingToUpdate) {
-      return res.status(404).json({ message: 'Shipping not found' });
-    }
+    const shippingToUpdate = await em.findOneOrFail(Shipping, { id });
     em.assign(shippingToUpdate, req.body);
     await em.flush();
     res

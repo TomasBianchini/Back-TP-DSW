@@ -35,4 +35,19 @@ class ForbiddenError extends Error {
   }
 }
 
-export { NotFoundError, ValidationError, UnauthorizedError, ForbiddenError };
+class InvalidCredentialsError extends Error {
+  status: number;
+  constructor(message: string) {
+    super(message);
+    this.name = 'InvalidCredentialsError';
+    this.status = HttpStatus.UNAUTHORIZED;
+  }
+}
+
+export {
+  NotFoundError,
+  ValidationError,
+  UnauthorizedError,
+  ForbiddenError,
+  InvalidCredentialsError,
+};

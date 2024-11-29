@@ -1,20 +1,27 @@
-import zod from "zod";
+import zod from 'zod';
+import { friendlyMessage } from '../utils/schemas.utils.js';
+import { ValidationError } from '../shared/constants/errors.js';
 
 const shippingSchema = zod.object({
   shipmethod: zod.string().refine((value) => value.trim().length > 0, {
-    message: "Payment type can not be empty or contain only spaces",
+    message: 'Payment type can not be empty or contain only spaces',
   }),
-  price: zod.number().min(0, { message: "Price must be a positive number" }),
+  price: zod.number().min(0, { message: 'Price must be a positive number' }),
   state: zod
-    .enum(["Archived", "Active"])
-    .default("Active")
-    .refine((value: string) => value === "Active" || value === "Archived", {
-      message: "State must be either Active or Archived",
+    .enum(['Archived', 'Active'])
+    .default('Active')
+    .refine((value: string) => value === 'Active' || value === 'Archived', {
+      message: 'State must be either Active or Archived',
     }),
   estimatedTime: zod.number(),
   cancellationDeadline: zod.number(),
 });
 
 export function validateShipping(data: any) {
-  return shippingSchema.safeParse(data);
+  const result = shippingSchema.safeParse(data);
+  if (!result.success) {
+    const message = friendlyMessage(result);
+    throw new ValidationError(message);
+  }
+  return result;
 }
