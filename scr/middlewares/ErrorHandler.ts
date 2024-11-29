@@ -10,6 +10,7 @@ import {
   ValidationError,
   UnauthorizedError,
   ForbiddenError,
+  InvalidCredentialsError,
 } from '../shared/constants/errors.js';
 
 const ErrorHandler = (
@@ -18,6 +19,12 @@ const ErrorHandler = (
   res: Response,
   next: NextFunction
 ) => {
+  if (err instanceof InvalidCredentialsError) {
+    return res.status(err.status).json({
+      message: err.message,
+    });
+  }
+
   if (err instanceof ValidationError) {
     return res.status(err.status).json({
       message: err.message,
