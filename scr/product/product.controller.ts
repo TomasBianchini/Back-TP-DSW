@@ -44,10 +44,7 @@ async function add(req: Request, res: Response, next: NextFunction) {
   try {
     const validationResult = validateProduct(req.body);
     const sellerId = res.locals.user;
-    const seller = await em.findOne(Seller, { id: sellerId });
-    if (!seller) {
-      return res.status(404).json({ message: 'Seller not found' });
-    }
+    const seller = await em.findOneOrFail(Seller, { id: sellerId });
     const product = em.create(Product, validationResult.data);
     await em.flush();
     res.status(201).json({ message: 'Product created', data: product });
@@ -60,10 +57,10 @@ async function update(req: Request, res: Response, next: NextFunction) {
   try {
     const id = req.params.id;
     const sellerId = res.locals.user;
-    const productToUpdate = await em.findOne(Product, { id, seller: sellerId });
-    if (!productToUpdate) {
-      return res.status(404).json({ message: 'Product not found' });
-    }
+    const productToUpdate = await em.findOneOrFail(Product, {
+      id,
+      seller: sellerId,
+    });
     em.assign(productToUpdate, req.body);
     await em.flush();
     res.status(200).json({ message: 'Product updated', data: productToUpdate });
@@ -76,10 +73,10 @@ async function remove(req: Request, res: Response, next: NextFunction) {
   try {
     const id = req.params.id;
     const sellerId = res.locals.user;
-    const productToRemove = await em.findOne(Product, { id, seller: sellerId });
-    if (!productToRemove) {
-      return res.status(404).json({ message: 'Product not found' });
-    }
+    const productToRemove = await em.findOneOrFail(Product, {
+      id,
+      seller: sellerId,
+    });
     productToRemove.state = 'Archived';
     await em.persistAndFlush(productToRemove);
     res.status(200).json({ message: 'Product deleted', data: productToRemove });
