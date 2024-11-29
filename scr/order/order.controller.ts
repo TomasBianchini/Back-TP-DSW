@@ -75,7 +75,7 @@ async function update(req: Request, res: Response, next: NextFunction) {
   try {
     const id: string = req.params.id;
     const cartId: string = req.params.cart_id;
-    const cart = await em.findOneOrFail(Cart, { id: cartId, state: 'Pending' });
+    await em.findOneOrFail(Cart, { id: cartId, state: 'Pending' });
     const orderToUpdate = await em.findOneOrFail(Order, { id });
     em.assign(orderToUpdate, req.body);
     await em.flush();
