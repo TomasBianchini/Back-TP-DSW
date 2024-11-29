@@ -11,9 +11,6 @@ async function updateOrders(orders: Order[]) {
     return Promise.all(
       orders.map(async (order: Order) => {
         const validationResult = validateOrder(order);
-        if (!validationResult.success) {
-          throw new Error(validationResult.error.message);
-        }
         const orderToUpdate = await em.findOneOrFail(Order, { id: order.id });
         em.assign(orderToUpdate, order);
         await em.flush();
