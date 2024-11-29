@@ -1,57 +1,48 @@
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
+import {
+  ForbiddenError,
+  UnauthorizedError,
+} from '../shared/constants/errors.js';
 
 const key: string | undefined = process.env.secret_key;
 
 async function auth(req: Request, res: Response, next: NextFunction) {
-  const token = req.header('Authorization');
   try {
+    const token = req.header('Authorization');
     const realToken = await isAuth(token!);
-    if (!realToken) {
-      return res.status(401).json({ message: 'Unauthorized' });
-    }
     const decode: any = jwt.verify(realToken, key!);
     res.locals.user = decode.user.id;
     next();
-  } catch (error: any) {
-    return res.status(401).json({ message: 'Invalid token' });
+  } catch (err: any) {
+    return next(err);
   }
 }
 
 async function isAdmin(req: Request, res: Response, next: NextFunction) {
-  const token = req.header('Authorization');
   try {
+    const token = req.header('Authorization');
     const realToken = await isAuth(token!);
-    if (!realToken) {
-      return res.status(401).json({ message: 'Unauthorized' });
-    }
     const decode: any = jwt.verify(realToken, key!);
     const user = decode.user;
     if (user.type !== 'Admin') {
-      return res.status(401).json({ message: 'Unauthorized' });
+      throw new UnauthorizedError('unauthorized');
     }
     res.locals.user = decode.user.id;
     next();
-  } catch (error: any) {
-    return res.status(401).json({ message: 'Invalid token' });
+  } catch (err: any) {
+    return next(err);
   }
 }
 
 async function isSeller(req: Request, res: Response, next: NextFunction) {
-  const token = req.header('Authorization');
-  if (!token) {
-    return res.status(403).json({ message: 'No token provided' });
-  }
   try {
-    const tokenParts = token.split(' ');
-    if (tokenParts[0] !== 'Bearer') {
-      return res.status(401).json({ message: 'Invalid token format' });
-    }
-    const realToken = tokenParts[1];
+    const token = req.header('Authorization');
+    const realToken = await isAuth(token!);
     const decode: any = jwt.verify(realToken, key!);
     const user = decode.user;
     if (user.type !== 'Seller') {
-      return res.status(401).json({ message: 'Unauthorized' });
+      throw new UnauthorizedError('unauthorized');
     }
     res.locals.user = decode.user.id;
     next();
@@ -63,15 +54,15 @@ async function isSeller(req: Request, res: Response, next: NextFunction) {
 async function isAuth(token: string) {
   try {
     if (!token) {
-      return false;
+      throw new ForbiddenError('Forbidden');
     }
     const tokenParts = token.split(' ');
     if (tokenParts[0] !== 'Bearer') {
-      return false;
+      throw new ForbiddenError('Forbidden');
     }
     return tokenParts[1];
   } catch (error: any) {
-    return false;
+    throw new UnauthorizedError('Unauthorized');
   }
 }
 
