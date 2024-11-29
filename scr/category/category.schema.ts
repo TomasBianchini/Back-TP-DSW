@@ -1,6 +1,6 @@
 import zod from 'zod';
 import { ValidationError } from '../shared/constants/errors.js';
-
+import { friendlyMessage } from '../utils/schemas.utils.js';
 const categorySchema = zod.object({
   category: zod
     .string()
@@ -20,7 +20,8 @@ const categorySchema = zod.object({
 export function validateCategory(data: any) {
   const result = categorySchema.safeParse(data);
   if (!result.success) {
-    throw new ValidationError(result.error.message);
+    const message = friendlyMessage(result);
+    throw new ValidationError(message);
   }
   return result;
 }

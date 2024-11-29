@@ -27,9 +27,6 @@ async function findOne(req: Request, res: Response, next: NextFunction) {
       { id },
       { populate: ['discounts'] }
     );
-    if (!category) {
-      return res.status(404).json({ message: 'Category not found' });
-    }
     res.status(200).json({ message: 'Found category', data: category });
   } catch (err: any) {
     next(err);

@@ -41,7 +41,8 @@ const ErrorHandler = (
       .status(HttpStatus.CONFLICT)
       .json({ message: 'A unique constraint violation occurred.' });
   }
-  if (err.code === '23503') {
+
+  if (err.code === 23503) {
     return res
       .status(HttpStatus.CONFLICT)
       .json({ message: 'A foreign key constraint violation occurred.' });

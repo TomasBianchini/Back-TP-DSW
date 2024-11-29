@@ -7,7 +7,6 @@ import {
   remove,
 } from './category.controller.js';
 import { auth, isAdmin } from '../middlewares/auth.js';
-import ErrorHandler from '../middlewares/ErrorHandler.js';
 import { discountRouter } from '../discount/discount.routes.js';
 
 export const categoryRouter = Router();
@@ -23,5 +22,3 @@ categoryRouter.patch('/:id', isAdmin, update);
 categoryRouter.delete('/:id', isAdmin, remove);
 
 categoryRouter.use('/:category_id/discounts', discountRouter);
-
-categoryRouter.use(ErrorHandler);
