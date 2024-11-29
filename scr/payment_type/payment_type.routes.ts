@@ -16,5 +16,3 @@ payment_typeRouter.post('/', isAdmin, add);
 payment_typeRouter.delete('/:id', isAdmin, remove);
 payment_typeRouter.put('/:id', isAdmin, update);
 payment_typeRouter.patch('/:id', isAdmin, update);
-
-payment_typeRouter.use(ErrorHandler);
