@@ -1,5 +1,6 @@
 import zod from 'zod';
-
+import { ValidationError } from '../shared/constants/errors.js';
+import { friendlyMessage } from '../utils/schemas.utils.js';
 const discountSchema = zod.object({
   value: zod
     .number()
@@ -15,5 +16,10 @@ const discountSchema = zod.object({
 });
 
 export function validateDiscount(data: any) {
-  return discountSchema.safeParse(data);
+  const result = discountSchema.safeParse(data);
+  if (!result.success) {
+    const message = friendlyMessage(result);
+    throw new ValidationError(message);
+  }
+  return result;
 }
