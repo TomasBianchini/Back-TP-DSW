@@ -45,7 +45,7 @@ export class Product extends BaseEntity {
     return this.state === 'Active' ? true : false;
   }
 
-  isAvailable(quantity: number) {
-    return this.stock >= quantity ? true : false;
+  isAvailable(requestedQuantity: number): boolean {
+    return this.stock >= requestedQuantity && this.isActive();
   }
 }

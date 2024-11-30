@@ -4,7 +4,6 @@ import { Order } from './order.entity.js';
 import { validateOrder } from './order.schema.js';
 import { Product } from '../product/product.entity.js';
 import { Cart } from '../cart/cart.entity.js';
-import { checkProductAvailability } from '../product/product.service.js';
 const em = orm.em;
 
 async function findAll(req: Request, res: Response, next: NextFunction) {
@@ -43,11 +42,11 @@ async function add(req: Request, res: Response, next: NextFunction) {
     }
     const user = res.locals.user;
     const validationResult = validateOrder({ ...req.body, cart: cartId });
-    const product = await em.findOne(Product, validationResult.data.product);
-    if (
-      !product ||
-      (await !checkProductAvailability(product, validationResult.data.quantity))
-    ) {
+    const product = await em.findOneOrFail(
+      Product,
+      validationResult.data.product
+    );
+    if (!product || !product.isAvailable(validationResult.data.quantity)) {
       return res.status(400).json({ message: 'Product not available' });
     }
     let cart = await em.findOneOrFail(Cart, {
@@ -88,6 +87,8 @@ async function update(req: Request, res: Response, next: NextFunction) {
 async function remove(req: Request, res: Response, next: NextFunction) {
   try {
     const id = req.params.id;
+    const cartId: string = req.params.cart_id;
+    await em.findOneOrFail(Cart, { id: cartId, state: 'Pending' });
     const order = em.getReference(Order, id);
     em.remove(order);
     await em.flush();
