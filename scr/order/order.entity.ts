@@ -16,6 +16,6 @@ export class Order extends BaseEntity {
   @Property({ nullable: false })
   subtotal!: number;
 
-  @ManyToOne(() => Cart, { nullable: false, lazy: true })
+  @ManyToOne(() => Cart, { nullable: false })
   cart!: Reference<Cart>;
 }

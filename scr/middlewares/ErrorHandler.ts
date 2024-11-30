@@ -11,6 +11,7 @@ import {
   UnauthorizedError,
   ForbiddenError,
   InvalidCredentialsError,
+  BadRequestError,
 } from '../shared/constants/errors.js';
 
 const errorHandler = (
@@ -30,6 +31,7 @@ const errorStatus = (error: any): number => {
   if (error instanceof NotFoundError) return HttpStatus.NOT_FOUND;
   if (error instanceof UnauthorizedError) return error.status;
   if (error instanceof ForbiddenError) return error.status;
+  if (error instanceof BadRequestError) return error.status;
   if (error instanceof UniqueConstraintViolationException)
     return HttpStatus.CONFLICT;
   if (error instanceof TokenExpiredError) return HttpStatus.UNAUTHORIZED;
@@ -46,6 +48,7 @@ const errorMessage = (error: any): string => {
   if (error instanceof ValidationError) return error.message;
   if (error instanceof NotFoundError) return error.message;
   if (error instanceof UnauthorizedError) return error.message;
+  if (error instanceof BadRequestError) return error.message;
   if (error instanceof ForbiddenError) return error.message;
   if (error instanceof UniqueConstraintViolationException)
     return 'A unique constraint violation occurred.';

@@ -59,7 +59,7 @@ async function add(req: Request, res: Response, next: NextFunction) {
     const order = em.create(Order, {
       quantity: validationResult.data.quantity,
       product: product,
-      cart: cart,
+      cart: cartId,
       subtotal: validationResult.data.subtotal,
     });
     em.persist(cart);

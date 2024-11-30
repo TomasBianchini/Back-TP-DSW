@@ -1,6 +1,6 @@
 import { Product } from '../product/product.entity.js';
-import { Cart } from './cart.entity';
-import { orm } from '../shared/db/orm';
+import { Cart } from './cart.entity.js';
+import { orm } from '../shared/db/orm.js';
 import { BadRequestError } from '../shared/constants/errors.js';
 import { Order } from '../order/order.entity.js';
 import { updateOrders } from '../order/order.service.js';

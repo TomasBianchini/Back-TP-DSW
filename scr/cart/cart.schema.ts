@@ -3,7 +3,7 @@ import { friendlyMessage } from '../utils/schemas.utils.js';
 import { ValidationError } from '../shared/constants/errors.js';
 
 const cartSchema = zod.object({
-  user: zod.string(),
+  user: zod.string().optional(),
   state: zod
     .enum(['Completed', 'Pending', 'Canceled'])
     .optional()

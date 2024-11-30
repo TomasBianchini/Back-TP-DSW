@@ -10,7 +10,7 @@ cartRouter.get('/:id', auth, findOne);
 
 cartRouter.post('/', auth, add);
 
-cartRouter.put('/:id/complete', auth, update);
+cartRouter.put('/:id', auth, update);
 
 cartRouter.delete('/:id', auth, remove);
 

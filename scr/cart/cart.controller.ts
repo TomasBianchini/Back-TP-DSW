@@ -40,7 +40,7 @@ async function findOne(req: Request, res: Response, next: NextFunction) {
   try {
     const id = req.params.id;
     const user = res.locals.user;
-    const cart = await em.findOne(
+    const cart = await em.findOneOrFail(
       Cart,
       { id, user },
       {
@@ -82,7 +82,7 @@ async function update(req: Request, res: Response, next: NextFunction) {
     const currentUser = res.locals.user;
     const updatedCartData: Cart = req.body;
     const existingCart = await em.findOneOrFail(Cart, { id: cartId });
-    if (existingCart.user.id !== currentUser.id) {
+    if (existingCart.user.id !== currentUser) {
       throw new BadRequestError('You cannot update a cart that is not yours');
     }
     validateCart(updatedCartData);
@@ -93,6 +93,7 @@ async function update(req: Request, res: Response, next: NextFunction) {
           'The cart is already completed, you cannot change it to pending'
         );
       } else if (updatedCartData.state === 'Canceled') {
+        //TODO test, something is wrong here
         if (existingCart.isCancelable()) {
           await cancelCart(updatedCartData, existingCart, currentUser);
         } else {
@@ -101,6 +102,7 @@ async function update(req: Request, res: Response, next: NextFunction) {
       }
     } else if (existingCart.isPending()) {
       if (updatedCartData.state === 'Completed') {
+        //TODO test
         await completeCart(updatedCartData, existingCart, currentUser);
       } else if (updatedCartData.state === 'Canceled') {
         await cancelPendingCart(existingCart);
@@ -120,11 +122,11 @@ async function remove(req: Request, res: Response, next: NextFunction) {
     const id = req.params.id;
     const user = res.locals.user;
     const cartToRemove = await em.findOneOrFail(Cart, { id });
-    if (cartToRemove.user.id !== user.id) {
+    if (cartToRemove.user.id !== user) {
       throw new BadRequestError('You cannot remove a cart that is not yours');
     }
     if (!cartToRemove.isPending()) {
-      return res.status(400).json({ message: 'The cart is not pending' });
+      throw new BadRequestError('Bad request');
     }
     await em.nativeDelete(Order, { cart: id });
     await em.nativeDelete(Cart, { id });
@@ -136,3 +138,5 @@ async function remove(req: Request, res: Response, next: NextFunction) {
 }
 
 export { findAll, findOne, add, update, remove };
+
+//TODO test updating cart pending to completed and completed to canceled
