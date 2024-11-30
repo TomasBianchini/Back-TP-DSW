@@ -6,7 +6,13 @@ import { Product } from '../product/product.entity.js';
 import { updateOrders } from '../order/order.service.js';
 import { validateCart } from './cart.schema.js';
 import { Order } from '../order/order.entity.js';
-import { calculateTotal } from './cart.service.js';
+import {
+  calculateTotal,
+  cancelCart,
+  cancelPendingCart,
+  completeCart,
+} from './cart.service.js';
+import { BadRequestError } from '../shared/constants/errors.js';
 const em = orm.em;
 
 async function findAll(req: Request, res: Response, next: NextFunction) {
@@ -57,13 +63,13 @@ async function findOne(req: Request, res: Response, next: NextFunction) {
 async function add(req: Request, res: Response, next: NextFunction) {
   try {
     const user = res.locals.user;
-    const existingCart = await em.findOne(Cart, { user, state: 'Pending' });
-    if (existingCart) {
+    const pendingCart = await em.findOne(Cart, { user, state: 'Pending' });
+    if (pendingCart) {
       return res.status(400).json({ message: 'There is a cart pending' });
     }
-    const cartToCreate: Cart = { ...req.body, user, state: 'Pending' };
-    validateCart(cartToCreate);
-    const cart = em.create(Cart, cartToCreate);
+    const newCart: Cart = { ...req.body, user, state: 'Pending' };
+    validateCart(newCart);
+    const cart = em.create(Cart, newCart);
     await em.flush();
     res.status(201).json({ message: 'Cart created', data: cart });
   } catch (err: any) {
@@ -72,26 +78,51 @@ async function add(req: Request, res: Response, next: NextFunction) {
 }
 async function update(req: Request, res: Response, next: NextFunction) {
   try {
-    const id = req.params.id;
-    const user = res.locals.user;
-    const cart: Cart = req.body;
-    const validationResult = validateCart(cart);
-    const ordersArray = Array.from(cart.orders);
-    await updateOrders(ordersArray);
-    const cartToUpdate = await em.findOneOrFail(Cart, { id });
-    let total: number = await calculateTotal(cartToUpdate);
-    em.assign(cartToUpdate, { ...cart, total, user });
-    await em.flush();
-    res.status(200).json({ message: 'Order updated', data: cartToUpdate });
-  } catch (err: any) {
-    next(err);
+    const cartId: string = req.params.id;
+    const currentUser = res.locals.user;
+    const updatedCartData: Cart = req.body;
+    const existingCart = await em.findOneOrFail(Cart, { id: cartId });
+    if (existingCart.user.id !== currentUser.id) {
+      throw new BadRequestError('You cannot update a cart that is not yours');
+    }
+    validateCart(updatedCartData);
+
+    if (existingCart.isCompleted()) {
+      if (updatedCartData.state === 'Pending') {
+        throw new BadRequestError(
+          'The cart is already completed, you cannot change it to pending'
+        );
+      } else if (updatedCartData.state === 'Canceled') {
+        if (existingCart.isCancelable()) {
+          await cancelCart(updatedCartData, existingCart, currentUser);
+        } else {
+          throw new BadRequestError('The cart is not cancelable');
+        }
+      }
+    } else if (existingCart.isPending()) {
+      if (updatedCartData.state === 'Completed') {
+        await completeCart(updatedCartData, existingCart, currentUser);
+      } else if (updatedCartData.state === 'Canceled') {
+        await cancelPendingCart(existingCart);
+      }
+    } else if (existingCart.isCanceled()) {
+      throw new BadRequestError('You cannot update a canceled cart');
+    }
+
+    res.status(200).json({ message: 'Cart updated', data: existingCart });
+  } catch (error: any) {
+    next(error);
   }
 }
 
 async function remove(req: Request, res: Response, next: NextFunction) {
   try {
     const id = req.params.id;
+    const user = res.locals.user;
     const cartToRemove = await em.findOneOrFail(Cart, { id });
+    if (cartToRemove.user.id !== user.id) {
+      throw new BadRequestError('You cannot remove a cart that is not yours');
+    }
     if (!cartToRemove.isPending()) {
       return res.status(400).json({ message: 'The cart is not pending' });
     }
@@ -104,35 +135,4 @@ async function remove(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-async function cancelCart(req: Request, res: Response, next: NextFunction) {
-  try {
-    const id = req.params.id;
-    const cart = await em.findOneOrFail(
-      Cart,
-      { id },
-      { populate: ['shipping', 'orders', 'orders.product'] }
-    );
-    if (cart.isCompleted() && cart.isCancelable()) {
-      for (const order of cart.orders) {
-        let productId: string;
-        if (typeof order.product === 'string') {
-          productId = order.product;
-        } else {
-          productId = order.product.id as string;
-        }
-        const product = await em.findOneOrFail(Product, { id: productId });
-        product.stock += order.quantity;
-        await em.persistAndFlush(product);
-      }
-      cart.state = 'Canceled';
-      await em.flush();
-      res.status(200).json({ message: 'Cart canceled', data: cart });
-    } else {
-      res.status(400).json({ message: 'The cart is not cancelable' });
-    }
-  } catch (err: any) {
-    next(err);
-  }
-}
-
-export { findAll, findOne, add, update, remove, cancelCart };
+export { findAll, findOne, add, update, remove };

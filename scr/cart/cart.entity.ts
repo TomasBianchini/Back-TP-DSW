@@ -45,7 +45,9 @@ export class Cart extends BaseEntity {
   isCompleted(): boolean {
     return this.state === 'Completed';
   }
-
+  isCanceled(): boolean {
+    return this.state === 'Canceled';
+  }
   isCancelable(): boolean {
     const now = new Date();
     const lastUpdated = new Date(this.updatedAt ?? now);

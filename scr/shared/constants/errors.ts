@@ -44,10 +44,20 @@ class InvalidCredentialsError extends Error {
   }
 }
 
+class BadRequestError extends Error {
+  status: number;
+  constructor(message: string) {
+    super(message);
+    this.name = 'BadRequestError';
+    this.status = HttpStatus.BAD_REQUEST;
+  }
+}
+
 export {
   NotFoundError,
   ValidationError,
   UnauthorizedError,
   ForbiddenError,
   InvalidCredentialsError,
+  BadRequestError,
 };
