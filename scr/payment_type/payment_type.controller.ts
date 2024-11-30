@@ -41,8 +41,9 @@ async function add(req: Request, res: Response, next: NextFunction) {
 async function update(req: Request, res: Response, next: NextFunction) {
   try {
     const id = req.params.id;
+    const data = validatePayment_type(req.body);
     const payment_typeToUpdate = await em.findOneOrFail(PaymentType, { id });
-    em.assign(payment_typeToUpdate, req.body);
+    em.assign(payment_typeToUpdate, data.data);
     await em.flush();
     res
       .status(200)

@@ -1,6 +1,9 @@
 import { Product } from './product.entity.js';
 
-async function checkProductAvailability(product: Product, quantity: number) {
+async function isProductAvailable(
+  product: Product,
+  quantity: number
+): Promise<boolean> {
   if (!product || !product.isActive() || !product.isAvailable(quantity)) {
     return false;
   }
@@ -10,15 +13,13 @@ async function checkProductAvailability(product: Product, quantity: number) {
 async function filterData(products: Product[]) {
   const filteredProducts = products.map((product) => {
     const discounts = product.category?.discounts || [];
-    const filteredDiscounts = discounts.filter((discount) =>
-      discount.isActive()
-    );
+    const activeDiscounts = discounts.filter((discount) => discount.isActive());
     return {
       ...product,
-      category: { ...product.category, discounts: filteredDiscounts },
+      category: { ...product.category, discounts: activeDiscounts },
     };
   });
   return filteredProducts;
 }
 
-export { checkProductAvailability, filterData };
+export { isProductAvailable, filterData };

@@ -47,14 +47,15 @@ export class Cart extends BaseEntity {
   }
 
   isCancelable(): boolean {
-    const currentDate = new Date();
-    const cartUpdatedAt = new Date(this.updatedAt ?? new Date());
-    const timeDifference = currentDate.valueOf() - cartUpdatedAt.valueOf();
-    const hoursDifference = timeDifference / (1000 * 3600);
+    const now = new Date();
+    const lastUpdated = new Date(this.updatedAt ?? now);
+    const diffInMilliseconds = now.getTime() - lastUpdated.getTime();
+    const diffInHours = diffInMilliseconds / (1000 * 3600);
+
     if (
       this.shipping &&
       this.shipping.cancellationDeadline &&
-      hoursDifference > this.shipping.cancellationDeadline
+      diffInHours > this.shipping.cancellationDeadline
     ) {
       return false;
     }
