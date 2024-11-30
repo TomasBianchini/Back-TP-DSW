@@ -12,6 +12,6 @@ userRouter.post('/', add);
 
 userRouter.delete('/:id', isAdmin, remove);
 
-userRouter.put('/:id', isAdmin, update);
+userRouter.put('/:id', auth, update);
 
-userRouter.patch('/:id', isAdmin, update);
+userRouter.patch('/:id', auth, update);

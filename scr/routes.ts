@@ -10,7 +10,7 @@ import { orderRouter } from './order/order.routes.js';
 import { cartRouter } from './cart/cart.routes.js';
 import { shippingRouter } from './shipping/shipping.routes.js';
 import { Router } from 'express';
-import ErrorHandler from './middlewares/ErrorHandler.js';
+import errorHandler from './middlewares/ErrorHandler.js';
 
 export const router = Router();
 
@@ -26,5 +26,5 @@ router.use('/orders', orderRouter);
 router.use('/carts', cartRouter);
 router.use('/shippings', shippingRouter);
 
-router.use(ErrorHandler);
+router.use(errorHandler);
 export default router;

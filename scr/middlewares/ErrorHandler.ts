@@ -13,67 +13,50 @@ import {
   InvalidCredentialsError,
 } from '../shared/constants/errors.js';
 
-const ErrorHandler = (
-  err: any,
+const errorHandler = (
+  error: Error,
   req: Request,
   res: Response,
   next: NextFunction
-) => {
-  if (err instanceof InvalidCredentialsError) {
-    return res.status(err.status).json({
-      message: err.message,
-    });
-  }
-
-  if (err instanceof ValidationError) {
-    return res.status(err.status).json({
-      message: err.message,
-    });
-  }
-  if (err instanceof NotFoundError) {
-    return res.status(HttpStatus.NOT_FOUND).json({
-      message: err.message,
-    });
-  }
-  if (err instanceof UnauthorizedError) {
-    return res.status(err.status).json({
-      message: err.message,
-    });
-  }
-  if (err instanceof ForbiddenError) {
-    return res.status(err.status).json({
-      message: err.message,
-    });
-  }
-  if (err instanceof UniqueConstraintViolationException) {
-    return res
-      .status(HttpStatus.CONFLICT)
-      .json({ message: 'A unique constraint violation occurred.' });
-  }
-
-  if (err instanceof TokenExpiredError) {
-    return res.status(HttpStatus.UNAUTHORIZED).json({
-      message: err.message,
-    });
-  }
-  if (err instanceof JsonWebTokenError) {
-    return res.status(HttpStatus.UNAUTHORIZED).json({
-      message: err.message,
-    });
-  }
-
-  if (err.code === 23503) {
-    return res
-      .status(HttpStatus.CONFLICT)
-      .json({ message: 'A foreign key constraint violation occurred.' });
-  }
-  if (err.code === 11000) {
-    return res
-      .status(HttpStatus.CONFLICT)
-      .json({ message: 'A unique constraint violation occurred.' });
-  }
-  console.error(err);
-  res.status(500).json({ message: err.message });
+): void => {
+  const status = errorStatus(error);
+  const message = errorMessage(error);
+  res.status(status).json({ message });
 };
 
-export default ErrorHandler;
+const errorStatus = (error: any): number => {
+  if (error instanceof InvalidCredentialsError) return error.status;
+  if (error instanceof ValidationError) return error.status;
+  if (error instanceof NotFoundError) return HttpStatus.NOT_FOUND;
+  if (error instanceof UnauthorizedError) return error.status;
+  if (error instanceof ForbiddenError) return error.status;
+  if (error instanceof UniqueConstraintViolationException)
+    return HttpStatus.CONFLICT;
+  if (error instanceof TokenExpiredError) return HttpStatus.UNAUTHORIZED;
+  if (error instanceof JsonWebTokenError) return HttpStatus.UNAUTHORIZED;
+
+  if (error.code === 23503) return HttpStatus.CONFLICT;
+  if (error.code === 11000) return HttpStatus.CONFLICT;
+
+  return HttpStatus.INTERNAL_SERVER_ERROR;
+};
+
+const errorMessage = (error: any): string => {
+  if (error instanceof InvalidCredentialsError) return error.message;
+  if (error instanceof ValidationError) return error.message;
+  if (error instanceof NotFoundError) return error.message;
+  if (error instanceof UnauthorizedError) return error.message;
+  if (error instanceof ForbiddenError) return error.message;
+  if (error instanceof UniqueConstraintViolationException)
+    return 'A unique constraint violation occurred.';
+  if (error instanceof TokenExpiredError) return error.message;
+  if (error instanceof JsonWebTokenError) return error.message;
+
+  if (error.code === 23503)
+    return 'A foreign key constraint violation occurred.';
+  if (error.code === 11000) return 'A unique constraint violation occurred.';
+
+  return error.message;
+};
+
+export default errorHandler;
