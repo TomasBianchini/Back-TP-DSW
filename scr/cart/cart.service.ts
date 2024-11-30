@@ -12,11 +12,7 @@ async function calculateTotal(cart: Cart): Promise<number> {
   }
   return total;
 }
-async function cancelCart(
-  cart: Cart,
-  updatedCart: Cart,
-  user: string
-): Promise<void> {
+async function cancelCart(cart: Cart, user: string): Promise<void> {
   try {
     const orders = Array.from(cart.orders);
     const productsToUpdate = orders.map(async (order) => {
@@ -27,8 +23,8 @@ async function cancelCart(
       return product;
     });
     await Promise.all(productsToUpdate);
-    updatedCart.state = 'Canceled';
-    em.assign(updatedCart, { ...cart, user });
+    cart.state = 'Canceled';
+    em.assign(cart, { ...cart, user });
     await em.flush();
   } catch (error: any) {
     throw new Error(error.message);

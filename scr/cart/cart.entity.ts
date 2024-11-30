@@ -5,6 +5,7 @@ import {
   OneToMany,
   Cascade,
   Collection,
+  Reference,
 } from '@mikro-orm/core';
 
 import { BaseEntity } from '../shared/db/baseEntity.entity.js';
@@ -30,7 +31,7 @@ export class Cart extends BaseEntity {
   total!: number;
 
   @ManyToOne(() => PaymentType, { nullable: true })
-  payment_type!: PaymentType | null;
+  payment_type!: Reference<PaymentType> | null;
 
   @ManyToOne(() => Shipping, { nullable: true })
   shipping!: Shipping | null;
@@ -53,7 +54,6 @@ export class Cart extends BaseEntity {
     const lastUpdated = new Date(this.updatedAt ?? now);
     const diffInMilliseconds = now.getTime() - lastUpdated.getTime();
     const diffInHours = diffInMilliseconds / (1000 * 3600);
-
     if (
       this.shipping &&
       this.shipping.cancellationDeadline &&

@@ -13,6 +13,7 @@ import {
   completeCart,
 } from './cart.service.js';
 import { BadRequestError } from '../shared/constants/errors.js';
+import { Shipping } from '../shipping/shipping.entity.js';
 const em = orm.em;
 
 async function findAll(req: Request, res: Response, next: NextFunction) {
@@ -81,7 +82,11 @@ async function update(req: Request, res: Response, next: NextFunction) {
     const cartId: string = req.params.id;
     const currentUser = res.locals.user;
     const updatedCartData: Cart = req.body;
-    const existingCart = await em.findOneOrFail(Cart, { id: cartId });
+    const existingCart = await em.findOneOrFail(
+      Cart,
+      { id: cartId },
+      { populate: ['orders', 'payment_type', 'shipping', 'user'] }
+    );
     if (existingCart.user.id !== currentUser) {
       throw new BadRequestError('You cannot update a cart that is not yours');
     }
@@ -93,9 +98,9 @@ async function update(req: Request, res: Response, next: NextFunction) {
           'The cart is already completed, you cannot change it to pending'
         );
       } else if (updatedCartData.state === 'Canceled') {
-        //TODO test, something is wrong here
         if (existingCart.isCancelable()) {
-          await cancelCart(updatedCartData, existingCart, currentUser);
+          //TODO test, something is wrong here
+          await cancelCart(existingCart, currentUser);
         } else {
           throw new BadRequestError('The cart is not cancelable');
         }
@@ -103,6 +108,14 @@ async function update(req: Request, res: Response, next: NextFunction) {
     } else if (existingCart.isPending()) {
       if (updatedCartData.state === 'Completed') {
         //TODO test
+        if (!updatedCartData.shipping) {
+          throw new BadRequestError('Shipping information is missing');
+        }
+        await em.findOneOrFail(Shipping, { id: updatedCartData.shipping.id });
+        if (!updatedCartData.payment_type) {
+          throw new BadRequestError('Payment information is missing');
+        }
+        await em.findOneOrFail('PaymentType', updatedCartData.payment_type);
         await completeCart(updatedCartData, existingCart, currentUser);
       } else if (updatedCartData.state === 'Canceled') {
         await cancelPendingCart(existingCart);
