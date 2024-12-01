@@ -5,6 +5,7 @@ class NotFoundError extends Error {
     super(message);
     this.name = 'NotFoundError';
     this.status = HttpStatus.NOT_FOUND;
+    Error.captureStackTrace(this, this.constructor);
   }
 }
 
@@ -14,6 +15,7 @@ class ValidationError extends Error {
     super(message);
     this.name = 'ValidationError';
     this.status = HttpStatus.BAD_REQUEST;
+    Error.captureStackTrace(this, this.constructor);
   }
 }
 
@@ -23,6 +25,7 @@ class UnauthorizedError extends Error {
     super(message);
     this.name = 'UnauthorizedError';
     this.status = HttpStatus.UNAUTHORIZED;
+    Error.captureStackTrace(this, this.constructor);
   }
 }
 
@@ -32,6 +35,7 @@ class ForbiddenError extends Error {
     super(message);
     this.name = 'ForbiddenError';
     this.status = HttpStatus.FORBIDDEN;
+    Error.captureStackTrace(this, this.constructor);
   }
 }
 
@@ -41,6 +45,7 @@ class InvalidCredentialsError extends Error {
     super(message);
     this.name = 'InvalidCredentialsError';
     this.status = HttpStatus.UNAUTHORIZED;
+    Error.captureStackTrace(this, this.constructor);
   }
 }
 
@@ -50,6 +55,7 @@ class BadRequestError extends Error {
     super(message);
     this.name = 'BadRequestError';
     this.status = HttpStatus.BAD_REQUEST;
+    Error.captureStackTrace(this, this.constructor);
   }
 }
 

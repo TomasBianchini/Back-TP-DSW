@@ -28,7 +28,6 @@ async function cancelCart(cart: Cart): Promise<void> {
     em.assign(cart, cartUpdated);
     await em.flush();
   } catch (error: any) {
-    console.log(error.stack);
     throw new Error();
   }
 }

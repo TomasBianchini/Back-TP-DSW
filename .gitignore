@@ -11,6 +11,8 @@ node_modules
 ./settings.json
 settings.json
 
+/logs
+
 .env
 
 /docs

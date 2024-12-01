@@ -104,7 +104,6 @@ async function update(req: Request, res: Response, next: NextFunction) {
         }
         const shipping: Shipping = existingCart.shipping as any;
         if (existingCart.isCancelable(shipping)) {
-          console.log('canceling cart');
           await cancelCart(existingCart);
         } else {
           throw new BadRequestError('The cart is not cancelable');
@@ -130,7 +129,6 @@ async function update(req: Request, res: Response, next: NextFunction) {
 
     res.status(200).json({ message: 'Cart updated', data: existingCart });
   } catch (error: any) {
-    console.log(error.stack);
     next(error);
   }
 }

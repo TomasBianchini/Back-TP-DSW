@@ -24,7 +24,12 @@ const errorHandler = (
 ): void => {
   const status = errorStatus(error);
   const message = errorMessage(error);
-  res.status(status).json({ message });
+  logger.error({
+    message,
+    stack: error.stack || 'There is no stack',
+    error: error,
+  });
+  console.log(error);
 };
 
 const errorStatus = (error: any): number => {
