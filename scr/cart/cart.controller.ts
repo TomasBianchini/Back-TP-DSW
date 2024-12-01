@@ -112,7 +112,6 @@ async function update(req: Request, res: Response, next: NextFunction) {
       }
     } else if (existingCart.isPending()) {
       if (updatedCartData.state === 'Completed') {
-        //TODO test
         if (!updatedCartData.shipping) {
           throw new BadRequestError('Shipping information is missing');
         }

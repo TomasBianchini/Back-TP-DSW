@@ -15,21 +15,20 @@ async function calculateTotal(cart: Cart): Promise<number> {
 async function cancelCart(cart: Cart): Promise<void> {
   try {
     const orders = Array.from(cart.orders);
-    const productsToUpdate = orders.map(async (order) => {
+    orders.map(async (order) => {
       const id =
         typeof order.product === 'string' ? order.product : order.product.id;
       const product = await em.findOneOrFail(Product, { id });
-      product.stock += order.quantity;
-      em.persistAndFlush(product);
-
-      // Asigna las referencias y luego realiza el flush
-      return product;
+      const prod = { stock: product.stock + order.quantity };
+      em.assign(product, prod);
+      await em.flush();
+      // return product;
     });
-    const products = await Promise.all(productsToUpdate);
-    cart.state = 'Canceled';
-    em.assign(cart, cart);
+    const cartUpdated = { state: 'Canceled' as 'Canceled' };
+    em.assign(cart, cartUpdated);
     await em.flush();
   } catch (error: any) {
+    console.log(error.stack);
     throw new Error();
   }
 }
