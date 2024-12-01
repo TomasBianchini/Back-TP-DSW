@@ -3,10 +3,7 @@ import { Cart } from './cart.entity.js';
 import { orm } from '../shared/db/orm.js';
 import { BadRequestError } from '../shared/constants/errors.js';
 import { Order } from '../order/order.entity.js';
-import { ErrorDescription } from 'mongodb';
 import { updateOrders } from '../order/order.service.js';
-import { Category } from '../category/category.entity.js';
-import { Seller } from '../users/seller.entity.js';
 const em = orm.em;
 async function calculateTotal(cart: Cart): Promise<number> {
   let total: number = 0;
@@ -32,8 +29,7 @@ async function cancelCart(cart: Cart): Promise<void> {
     cart.state = 'Canceled';
     em.assign(cart, cart);
     await em.flush();
-  } catch (error: ErrorDescription | any) {
-    console.log(error);
+  } catch (error: any) {
     throw new Error();
   }
 }
