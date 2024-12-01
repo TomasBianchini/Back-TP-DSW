@@ -22,8 +22,8 @@ async function cancelCart(cart: Cart): Promise<void> {
       const id =
         typeof order.product === 'string' ? order.product : order.product.id;
       const product = await em.findOneOrFail(Product, { id });
-      const stock = product.stock + order.quantity;
-      em.assign(product, { stock });
+      product.stock += order.quantity;
+      em.persistAndFlush(product);
 
       // Asigna las referencias y luego realiza el flush
       return product;
