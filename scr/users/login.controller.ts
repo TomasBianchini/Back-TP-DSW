@@ -3,7 +3,7 @@ import { orm } from '../shared/db/orm.js';
 import { User } from './user.entity.js';
 import jwt from 'jsonwebtoken';
 import { Seller } from './seller.entity.js';
-import { InvalidCredentialsError } from '../shared/constants/errors.js';
+import { InvalidCredentialsError } from '../shared/utils/errors.js';
 const em = orm.em;
 
 async function login(req: Request, res: Response, next: NextFunction) {

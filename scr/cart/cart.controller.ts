@@ -12,7 +12,7 @@ import {
   cancelPendingCart,
   completeCart,
 } from './cart.service.js';
-import { BadRequestError } from '../shared/constants/errors.js';
+import { BadRequestError } from '../shared/utils/errors.js';
 import { Shipping } from '../shipping/shipping.entity.js';
 import { FilterQuery, Reference } from '@mikro-orm/core';
 const em = orm.em;

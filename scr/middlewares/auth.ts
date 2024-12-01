@@ -1,9 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
-import {
-  ForbiddenError,
-  UnauthorizedError,
-} from '../shared/constants/errors.js';
+import { ForbiddenError, UnauthorizedError } from '../shared/utils/errors.js';
 
 const key: string | undefined = process.env.secret_key;
 

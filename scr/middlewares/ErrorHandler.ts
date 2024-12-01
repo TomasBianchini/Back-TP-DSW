@@ -5,14 +5,16 @@ import {
 } from '@mikro-orm/core';
 import jsonwebtoken from 'jsonwebtoken';
 const { TokenExpiredError, JsonWebTokenError } = jsonwebtoken;
-import { HttpStatus } from '../shared/constants/HttpStatus.js';
+import { HttpStatus } from '../shared/utils/HttpStatus.js';
 import {
   ValidationError,
   UnauthorizedError,
   ForbiddenError,
   InvalidCredentialsError,
   BadRequestError,
-} from '../shared/constants/errors.js';
+} from '../shared/utils/errors.js';
+
+import logger from '../shared/utils/logger.js';
 
 const errorHandler = (
   error: Error,

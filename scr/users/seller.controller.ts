@@ -3,7 +3,7 @@ import { orm } from '../shared/db/orm.js';
 import { validateSeller } from './user.schema.js';
 import { UserFilter } from './user.filter.js';
 import { Seller } from './seller.entity.js';
-import { ForbiddenError } from '../shared/constants/errors.js';
+import { ForbiddenError } from '../shared/utils/errors.js';
 const em = orm.em;
 
 async function findAll(req: Request, res: Response, next: NextFunction) {

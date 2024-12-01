@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import OpenAI from 'openai';
-import { BadRequestError } from '../shared/constants/errors.js';
+import { BadRequestError } from '../shared/utils/errors.js';
 async function isAppropriate(req: Request, res: Response, next: NextFunction) {
   const review = req.body.comment;
   const openai = new OpenAI({

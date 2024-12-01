@@ -1,6 +1,6 @@
 import zod from 'zod';
-import { friendlyMessage } from '../utils/schemas.utils.js';
-import { ValidationError } from '../shared/constants/errors.js';
+import { friendlyMessage } from '../shared/utils/schemas.utils.js';
+import { ValidationError } from '../shared/utils/errors.js';
 
 const shippingSchema = zod.object({
   shipmethod: zod.string().refine((value) => value.trim().length > 0, {
