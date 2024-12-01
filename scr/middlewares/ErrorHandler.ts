@@ -29,7 +29,7 @@ const errorHandler = (
     stack: error.stack || 'There is no stack',
     error: error,
   });
-  console.log(error);
+  res.status(status).json({ message });
 };
 
 const errorStatus = (error: any): number => {
