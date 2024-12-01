@@ -9,7 +9,9 @@ import { reviewRouter } from './review/review.routes.js';
 import { orderRouter } from './order/order.routes.js';
 import { cartRouter } from './cart/cart.routes.js';
 import { shippingRouter } from './shipping/shipping.routes.js';
+import { meliRouter } from './mercado-libre/account/meliAccount.routes.js';
 import { Router } from 'express';
+
 import errorHandler from './middlewares/ErrorHandler.js';
 
 export const router = Router();
@@ -25,6 +27,7 @@ router.use('/reviews', reviewRouter);
 router.use('/orders', orderRouter);
 router.use('/carts', cartRouter);
 router.use('/shippings', shippingRouter);
+router.use('/mercado-libre', meliRouter);
 
 router.use(errorHandler);
 export default router;
