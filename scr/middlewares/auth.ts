@@ -25,7 +25,7 @@ async function isAdmin(req: Request, res: Response, next: NextFunction) {
     const realToken = await isAuth(token!);
     const decode: any = jwt.verify(realToken, key!);
     const user = decode.user;
-    if (!user.isAdmin()) {
+    if (user.type !== 'Admin') {
       throw new UnauthorizedError('unauthorized');
     }
     res.locals.user = decode.user.id;
@@ -41,7 +41,7 @@ async function isSeller(req: Request, res: Response, next: NextFunction) {
     const realToken = await isAuth(token!);
     const decode: any = jwt.verify(realToken, key!);
     const user = decode.user;
-    if (!user.isSeller()) {
+    if (user.type !== 'Seller') {
       throw new UnauthorizedError('unauthorized');
     }
     res.locals.user = decode.user.id;

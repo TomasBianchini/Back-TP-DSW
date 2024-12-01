@@ -3,7 +3,10 @@ import { Cart } from './cart.entity.js';
 import { orm } from '../shared/db/orm.js';
 import { BadRequestError } from '../shared/constants/errors.js';
 import { Order } from '../order/order.entity.js';
+import { ErrorDescription } from 'mongodb';
 import { updateOrders } from '../order/order.service.js';
+import { Category } from '../category/category.entity.js';
+import { Seller } from '../users/seller.entity.js';
 const em = orm.em;
 async function calculateTotal(cart: Cart): Promise<number> {
   let total: number = 0;
@@ -12,22 +15,26 @@ async function calculateTotal(cart: Cart): Promise<number> {
   }
   return total;
 }
-async function cancelCart(cart: Cart, user: string): Promise<void> {
+async function cancelCart(cart: Cart): Promise<void> {
   try {
     const orders = Array.from(cart.orders);
     const productsToUpdate = orders.map(async (order) => {
-      const productId =
+      const id =
         typeof order.product === 'string' ? order.product : order.product.id;
-      const product = await em.findOneOrFail(Product, { id: productId });
-      product.stock += order.quantity;
+      const product = await em.findOneOrFail(Product, { id });
+      const stock = product.stock + order.quantity;
+      em.assign(product, { stock });
+
+      // Asigna las referencias y luego realiza el flush
       return product;
     });
-    await Promise.all(productsToUpdate);
+    const products = await Promise.all(productsToUpdate);
     cart.state = 'Canceled';
-    em.assign(cart, { ...cart, user });
+    em.assign(cart, cart);
     await em.flush();
-  } catch (error: any) {
-    throw new Error(error.message);
+  } catch (error: ErrorDescription | any) {
+    console.log(error);
+    throw new Error();
   }
 }
 
@@ -50,12 +57,12 @@ async function completeCart(
   user: string
 ): Promise<void> {
   try {
-    const orders = Array.from(cart.orders);
+    const orders = Array.from(cartToUpdate.orders);
     await updateOrders(orders);
     let total: number = await calculateTotal(cartToUpdate);
-    cartToUpdate.total = total;
-    cartToUpdate.state = 'Completed';
-    em.assign(cartToUpdate, { ...cartToUpdate, user });
+    cart.total = total;
+    cart.state = 'Completed';
+    em.assign(cartToUpdate, { ...cart, user });
     await em.flush();
   } catch (err: any) {
     throw new Error(err.message);

@@ -4,9 +4,9 @@ import { ValidationError } from '../shared/constants/errors.js';
 
 const orderSchema = zod.object({
   subtotal: zod.number(),
-  product: zod.string(),
+  product: zod.union([zod.string(), zod.object({ id: zod.string() })]),
   quantity: zod.number().min(1),
-  cart: zod.string().optional(),
+  cart: zod.union([zod.string(), zod.object({ id: zod.string() })]),
 });
 
 export function validateOrder(data: any) {

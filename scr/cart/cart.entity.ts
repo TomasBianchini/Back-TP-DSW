@@ -31,10 +31,10 @@ export class Cart extends BaseEntity {
   total!: number;
 
   @ManyToOne(() => PaymentType, { nullable: true })
-  payment_type!: Reference<PaymentType> | null;
+  payment_type!: Reference<PaymentType> | undefined;
 
   @ManyToOne(() => Shipping, { nullable: true })
-  shipping!: Shipping | null;
+  shipping!: Reference<Shipping> | undefined;
 
   @Property({ nullable: true })
   completed_at!: Date | null;
@@ -49,15 +49,15 @@ export class Cart extends BaseEntity {
   isCanceled(): boolean {
     return this.state === 'Canceled';
   }
-  isCancelable(): boolean {
+  isCancelable(shipping: Shipping): boolean {
     const now = new Date();
     const lastUpdated = new Date(this.updatedAt ?? now);
     const diffInMilliseconds = now.getTime() - lastUpdated.getTime();
     const diffInHours = diffInMilliseconds / (1000 * 3600);
     if (
-      this.shipping &&
-      this.shipping.cancellationDeadline &&
-      diffInHours > this.shipping.cancellationDeadline
+      shipping &&
+      shipping.cancellationDeadline &&
+      diffInHours > shipping.cancellationDeadline
     ) {
       return false;
     }

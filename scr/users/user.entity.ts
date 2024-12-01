@@ -40,11 +40,11 @@ export class User extends BaseEntity {
     return verify(this.password, password);
   }
 
-  isAdmin() {
+  isAdmin(): boolean {
     return this.type === 'Admin';
   }
 
-  isSeller() {
+  isSeller(): boolean {
     return this.type === 'Seller';
   }
 }

@@ -55,7 +55,11 @@ async function add(req: Request, res: Response, next: NextFunction) {
       state: 'Pending',
     });
     cart.total += validationResult.data.subtotal;
-    validationResult.data.cart = cart.id;
+    if (cart.id) {
+      validationResult.data.cart = cart.id;
+    } else {
+      return res.status(400).json({ message: 'Cart id is undefined' });
+    }
     const order = em.create(Order, {
       quantity: validationResult.data.quantity,
       product: product,

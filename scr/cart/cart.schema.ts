@@ -18,7 +18,7 @@ const cartSchema = zod.object({
     .nonnegative({ message: 'Total must be a positive number' })
     .optional()
     .default(0),
-  shipmethod: zod.string().optional(),
+  shipping: zod.string().optional(),
   payment_type: zod.string().optional(),
 });
 

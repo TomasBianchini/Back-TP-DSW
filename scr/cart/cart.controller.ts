@@ -14,6 +14,7 @@ import {
 } from './cart.service.js';
 import { BadRequestError } from '../shared/constants/errors.js';
 import { Shipping } from '../shipping/shipping.entity.js';
+import { FilterQuery, Reference } from '@mikro-orm/core';
 const em = orm.em;
 
 async function findAll(req: Request, res: Response, next: NextFunction) {
@@ -80,7 +81,7 @@ async function add(req: Request, res: Response, next: NextFunction) {
 async function update(req: Request, res: Response, next: NextFunction) {
   try {
     const cartId: string = req.params.id;
-    const currentUser = res.locals.user;
+    const currentUser: string = res.locals.user;
     const updatedCartData: Cart = req.body;
     const existingCart = await em.findOneOrFail(
       Cart,
@@ -98,9 +99,13 @@ async function update(req: Request, res: Response, next: NextFunction) {
           'The cart is already completed, you cannot change it to pending'
         );
       } else if (updatedCartData.state === 'Canceled') {
-        if (existingCart.isCancelable()) {
-          //TODO test, something is wrong here
-          await cancelCart(existingCart, currentUser);
+        if (!existingCart.shipping) {
+          throw new BadRequestError('Shipping information is missing');
+        }
+        const shipping: Shipping = existingCart.shipping as any;
+        if (existingCart.isCancelable(shipping)) {
+          console.log('canceling cart');
+          await cancelCart(existingCart);
         } else {
           throw new BadRequestError('The cart is not cancelable');
         }
@@ -111,7 +116,7 @@ async function update(req: Request, res: Response, next: NextFunction) {
         if (!updatedCartData.shipping) {
           throw new BadRequestError('Shipping information is missing');
         }
-        await em.findOneOrFail(Shipping, { id: updatedCartData.shipping.id });
+        await em.findOneOrFail('Shipping', updatedCartData.shipping);
         if (!updatedCartData.payment_type) {
           throw new BadRequestError('Payment information is missing');
         }
@@ -126,6 +131,7 @@ async function update(req: Request, res: Response, next: NextFunction) {
 
     res.status(200).json({ message: 'Cart updated', data: existingCart });
   } catch (error: any) {
+    console.log(error.stack);
     next(error);
   }
 }

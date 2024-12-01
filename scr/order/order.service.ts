@@ -10,9 +10,14 @@ async function updateOrders(orders: Order[]) {
     const validationResult = validateOrder(order);
     const orderToUpdate = await em.findOneOrFail(Order, { id: order.id });
     em.assign(orderToUpdate, order);
-
+    let productId =
+      typeof order.product === 'string'
+        ? validationResult.data.product
+        : typeof validationResult.data.product === 'string'
+        ? validationResult.data.product
+        : validationResult.data.product.id;
     const product = await em.findOneOrFail(Product, {
-      id: validationResult.data.product,
+      id: typeof productId === 'string' ? productId : productId.id,
       state: 'Active',
     });
     if (!product.isAvailable(order.quantity)) {
