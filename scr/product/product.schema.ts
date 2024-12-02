@@ -1,6 +1,7 @@
 import zod from 'zod';
 import { ValidationError } from '../shared/utils/errors.js';
 import { friendlyMessage } from '../shared/utils/schemas.utils.js';
+import { MeliProduct } from '../mercado-libre/product/meliProduct.entity.js';
 
 const productSchema = zod.object({
   name: zod.string().min(5),
@@ -17,6 +18,7 @@ const productSchema = zod.object({
     }),
   category: zod.string(),
   seller: zod.string(),
+  meliProduct: zod.string().optional(),
 });
 export function validateProduct(data: any) {
   const result = productSchema.safeParse(data);

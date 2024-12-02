@@ -6,11 +6,14 @@ import {
   OneToMany,
   Collection,
   Cascade,
+  OneToOne,
+  Reference,
 } from '@mikro-orm/core';
 import { BaseEntity } from '../shared/db/baseEntity.entity.js';
 import { Category } from '../category/category.entity.js';
 import { Seller } from '../users/seller.entity.js';
 import { Review } from '../review/review.entity.js';
+import { MeliProduct } from '../mercado-libre/product/meliProduct.entity.js';
 @Entity()
 export class Product extends BaseEntity {
   @Property({ nullable: false })
@@ -41,6 +44,10 @@ export class Product extends BaseEntity {
     cascade: [Cascade.ALL],
   })
   reviews = new Collection<Review>(this);
+
+  @OneToOne(() => MeliProduct, { nullable: true })
+  meliProduct!: Reference<MeliProduct> | undefined;
+
   isActive() {
     return this.state === 'Active' ? true : false;
   }

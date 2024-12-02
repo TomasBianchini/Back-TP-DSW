@@ -5,6 +5,7 @@ import { NextFunction, Request, Response } from 'express';
 import { ProductFilter } from './product.filter.js';
 import { Seller } from '../users/seller.entity.js';
 import { filterData } from './product.service.js';
+import { MeliProduct } from '../mercado-libre/product/meliProduct.entity.js';
 
 const em = orm.em;
 
@@ -45,7 +46,10 @@ async function add(req: Request, res: Response, next: NextFunction) {
     const validationResult = validateProduct(req.body);
     const sellerId = res.locals.user;
     const seller = await em.findOneOrFail(Seller, { id: sellerId });
-    const product = em.create(Product, validationResult.data);
+    const product = em.create(Product, {
+      ...validationResult.data,
+      meliProduct: undefined,
+    });
     await em.flush();
     res.status(201).json({ message: 'Product created', data: product });
   } catch (err: any) {
