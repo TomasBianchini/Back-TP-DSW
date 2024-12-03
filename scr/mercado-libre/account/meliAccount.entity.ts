@@ -5,9 +5,12 @@ import {
   DateTimeType,
   BeforeCreate,
   BeforeUpdate,
+  OneToOne,
+  Reference,
 } from '@mikro-orm/core';
 import { ObjectId } from '@mikro-orm/mongodb';
-import { decrypt, encrypt } from '../../shared/utils/encrypt.js';
+import { decrypt, encrypt } from '../../shared/utils/encryptor.js';
+import { Seller } from '../../users/seller.entity.js';
 @Entity()
 export class MeliAccount {
   @PrimaryKey()
@@ -38,13 +41,16 @@ export class MeliAccount {
   scope!: string;
 
   @Property({ nullable: false })
-  user_id!: number;
+  userId!: number;
 
   @Property({ nullable: false })
   nickname!: string;
 
   @Property({ nullable: false })
-  status!: string;
+  state!: string;
+
+  @OneToOne(() => Seller, { nullable: false })
+  seller!: Reference<Seller>;
 
   @Property({ type: DateTimeType })
   createdAt? = new Date();
@@ -54,6 +60,32 @@ export class MeliAccount {
     onUpdate: () => new Date(),
   })
   updatedAt? = new Date();
+
+  constructor(
+    id: string,
+    accessToken: string,
+    refreshToken: string,
+    expiresIn: number,
+    tokenType: string,
+    scope: string,
+    userId: number,
+    nickname: string,
+    state: string,
+    seller: Reference<Seller>,
+    shopName: string = ''
+  ) {
+    this.id = id;
+    this.accessToken = accessToken;
+    this.refreshToken = refreshToken;
+    this.expiresIn = expiresIn;
+    this.tokenType = tokenType;
+    this.scope = scope;
+    this.userId = userId;
+    this.nickname = nickname;
+    this.state = state;
+    this.seller = seller;
+    this.shopName = shopName;
+  }
 
   isTokenExpired(): boolean {
     return new Date() > this.expirationDate;

@@ -46,7 +46,7 @@ async function refreshToken(meliAccount: MeliAccount) {
 }
 
 async function revokeGrant(meliAccount: MeliAccount) {
-  const endpoint = `${endpoint_base}/users/${meliAccount.user_id}/applications/${clientId}`;
+  const endpoint = `${endpoint_base}/users/${meliAccount.userId}/applications/${clientId}`;
   try {
     const response = await axios.delete(endpoint, {
       headers: {

@@ -3,7 +3,7 @@ import { auth, isSeller } from '../../middlewares/auth.js';
 import { Router } from 'express';
 const meliRouter = Router();
 
-meliRouter.get('/', auth, get);
+meliRouter.get('/:id', auth, get);
 meliRouter.post('/', isSeller, add);
 meliRouter.put('/:id', isSeller, update);
 meliRouter.delete('/:id', isSeller, remove);

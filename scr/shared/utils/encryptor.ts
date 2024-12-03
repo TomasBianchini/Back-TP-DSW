@@ -1,6 +1,9 @@
 import crypto from 'crypto';
+import dotenv from 'dotenv';
+dotenv.config();
 const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY || '';
 const IV_LENGTH = 16;
+
 function encrypt(text: string) {
   const iv = crypto.randomBytes(IV_LENGTH);
   const cipher = crypto.createCipheriv(
