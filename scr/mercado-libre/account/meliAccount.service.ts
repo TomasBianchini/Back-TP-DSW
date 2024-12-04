@@ -60,4 +60,24 @@ async function revokeGrant(meliAccount: MeliAccount) {
   }
 }
 
-export const meliAccountService = { oauth, refreshToken, revokeGrant };
+async function getNickname(meliAccount: MeliAccount): Promise<string> {
+  const endpoint = `${endpoint_base}/users/${meliAccount.userId}`;
+  try {
+    const response = await axios.get(endpoint, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${meliAccount.accessToken}`,
+      },
+    });
+    return response.data.nickname;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const meliAccountService = {
+  oauth,
+  refreshToken,
+  revokeGrant,
+  getNickname,
+};

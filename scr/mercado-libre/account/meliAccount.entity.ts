@@ -47,7 +47,7 @@ export class MeliAccount {
   nickname!: string;
 
   @Property({ nullable: false })
-  state!: string;
+  state!: 'active' | 'inactive';
 
   @OneToOne(() => Seller, { nullable: false })
   seller!: Reference<Seller>;
@@ -70,7 +70,7 @@ export class MeliAccount {
     scope: string,
     userId: number,
     nickname: string,
-    state: string,
+    state: 'active' | 'inactive',
     seller: Reference<Seller>,
     shopName: string = ''
   ) {

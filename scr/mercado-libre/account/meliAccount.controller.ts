@@ -26,11 +26,20 @@ async function add(req: Request, res: Response, next: NextFunction) {
       meliAccount.token_type,
       meliAccount.scope,
       meliAccount.user_id,
-      'TEST',
+      '',
       meliAccount.state,
       sellerId,
       'TEST'
     );
+    newMeliAccount.nickname = await meliAccountService.getNickname(
+      newMeliAccount
+    );
+    const existingMeliAccountByUserId = await em.findOne(MeliAccount, {
+      userId: meliAccount.user_id,
+    });
+    if (existingMeliAccountByUserId) {
+      throw new BadRequestError('MeliAccount already exists');
+    }
     const accountCreated = em.create(MeliAccount, newMeliAccount);
     console.log('newMeliAccount: ', accountCreated);
     await em.flush();
@@ -49,7 +58,6 @@ async function get(req: Request, res: Response, next: NextFunction) {
       {
         id: meliId,
         seller: sellerId,
-        state: 'active',
       },
       { populate: ['seller'] }
     );
