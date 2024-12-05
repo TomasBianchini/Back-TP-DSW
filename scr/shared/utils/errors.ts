@@ -59,7 +59,7 @@ class BadRequestError extends Error {
   }
 }
 
-class MeliError extends Error {
+class ApiResponseError extends Error {
   status: number;
   constructor(message: string, status: number, name: string) {
     super(message);
@@ -76,5 +76,5 @@ export {
   ForbiddenError,
   InvalidCredentialsError,
   BadRequestError,
-  MeliError,
+  ApiResponseError,
 };
