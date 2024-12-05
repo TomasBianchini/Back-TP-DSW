@@ -108,4 +108,12 @@ export class MeliAccount {
     this.accessToken = decrypt(this.accessToken);
     this.refreshToken = decrypt(this.refreshToken);
   }
+
+  isActive() {
+    return this.state === 'active';
+  }
+
+  isInactive() {
+    return this.state === 'inactive';
+  }
 }
