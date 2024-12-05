@@ -59,6 +59,16 @@ class BadRequestError extends Error {
   }
 }
 
+class MeliError extends Error {
+  status: number;
+  constructor(message: string, status: number, name: string) {
+    super(message);
+    this.name = name;
+    this.status = status;
+    Error.captureStackTrace(this, this.constructor);
+  }
+}
+
 export {
   NotFoundError,
   ValidationError,
@@ -66,4 +76,5 @@ export {
   ForbiddenError,
   InvalidCredentialsError,
   BadRequestError,
+  MeliError,
 };
