@@ -33,4 +33,22 @@ export class MeliNotification {
 
   @ManyToOne(() => MeliAccount, { nullable: false })
   account!: Rel<MeliAccount>;
+
+  constructor(
+    id: string,
+    resource: string,
+    topic: string,
+    userId: number,
+    applicationId: number,
+    sent: Date,
+    recieved: Date
+  ) {
+    this.id = id;
+    this.resource = resource;
+    this.topic = topic;
+    this.userId = userId;
+    this.applicationId = applicationId;
+    this.sent = sent;
+    this.recieved = recieved;
+  }
 }
