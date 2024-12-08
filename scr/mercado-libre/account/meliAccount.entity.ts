@@ -23,9 +23,6 @@ export class MeliAccount {
   accessToken!: string;
 
   @Property({ nullable: false })
-  shopName!: string;
-
-  @Property({ nullable: false })
   refreshToken!: string;
 
   @Property({ nullable: false })
@@ -71,8 +68,7 @@ export class MeliAccount {
     userId: number,
     nickname: string,
     state: 'active' | 'inactive',
-    seller: Reference<Seller>,
-    shopName: string = ''
+    seller: Reference<Seller>
   ) {
     this.id = id;
     this.accessToken = accessToken;
@@ -84,7 +80,6 @@ export class MeliAccount {
     this.nickname = nickname;
     this.state = state;
     this.seller = seller;
-    this.shopName = shopName;
   }
 
   isTokenExpired(): boolean {

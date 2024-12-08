@@ -29,8 +29,7 @@ async function add(req: Request, res: Response, next: NextFunction) {
       meliAccount.user_id,
       '',
       meliAccount.state,
-      sellerId,
-      'TEST'
+      sellerId
     );
     newMeliAccount.nickname = await meliAccountService.getNickname(
       newMeliAccount
