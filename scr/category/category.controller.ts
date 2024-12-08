@@ -2,7 +2,6 @@ import { Category } from './category.entity.js';
 import { NextFunction, Request, Response } from 'express';
 import { orm } from '../shared/db/orm.js';
 import { validateCategory } from './category.schema.js';
-import { populate } from 'dotenv';
 import { Discount } from '../discount/discount.entity.js';
 
 const em = orm.em;
