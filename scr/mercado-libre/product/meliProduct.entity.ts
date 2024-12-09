@@ -16,7 +16,7 @@ export class MeliProduct {
   _id?: ObjectId = new ObjectId();
 
   @Property()
-  id!: string;
+  meliId!: string;
 
   @ManyToOne(() => MeliAccount, { nullable: false })
   account!: Reference<MeliAccount>;
