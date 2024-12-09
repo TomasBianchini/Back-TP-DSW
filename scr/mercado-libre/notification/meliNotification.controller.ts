@@ -1,5 +1,5 @@
 import { NextFunction, Response, Request } from 'express';
-import { processItemNotification } from './meliNotification.service.js';
+import { processStockNotification } from './meliNotification.service.js';
 import { MeliNotification } from './meliNotification.entity.js';
 import { orm } from '../../shared/db/orm.js';
 const em = orm.em;
@@ -29,8 +29,8 @@ async function add(req: Request, res: Response, next: NextFunction) {
     ///
   } else if (newNotification.topic == 'messages') {
     // Do something
-  } else if (newNotification.topic == 'items') {
-    processItemNotification(newNotification);
+  } else if (newNotification.topic == 'stock-locations') {
+    processStockNotification(newNotification);
   }
 }
 
