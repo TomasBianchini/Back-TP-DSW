@@ -6,7 +6,7 @@ const em = orm.em;
 async function add(req: Request, res: Response, next: NextFunction) {
   res.status(200).send('OK');
   const existingNotification = await em.findOne(MeliNotification, {
-    id: req.body._id,
+    meliId: req.body._id,
   });
   if (existingNotification) {
     existingNotification.attempts = req.body.attempts;

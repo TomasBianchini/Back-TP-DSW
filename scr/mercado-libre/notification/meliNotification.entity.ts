@@ -8,7 +8,7 @@ export class MeliNotification {
   _id?: ObjectId = new ObjectId();
 
   @Property()
-  id!: string;
+  meliId!: string;
 
   @Property()
   resource!: string;
@@ -35,7 +35,7 @@ export class MeliNotification {
   account!: Rel<MeliAccount>;
 
   constructor(
-    id: string,
+    meliId: string,
     resource: string,
     topic: string,
     userId: number,
@@ -43,7 +43,7 @@ export class MeliNotification {
     sent: Date,
     recieved: Date
   ) {
-    this.id = id;
+    this.meliId = meliId;
     this.resource = resource;
     this.topic = topic;
     this.userId = userId;
