@@ -1,4 +1,11 @@
-import { Property, Entity, ManyToOne, Rel, PrimaryKey } from '@mikro-orm/core';
+import {
+  Property,
+  Entity,
+  ManyToOne,
+  Rel,
+  PrimaryKey,
+  Reference,
+} from '@mikro-orm/core';
 import { MeliAccount } from '../account/meliAccount.entity.js';
 import { ObjectId } from '@mikro-orm/mongodb';
 
@@ -16,8 +23,8 @@ export class MeliNotification {
   @Property()
   topic!: string;
 
-  @Property()
-  userId!: number;
+  @ManyToOne(() => MeliAccount, { fieldName: 'userId' })
+  userId!: Reference<MeliAccount>;
 
   @Property()
   applicationId!: number;
@@ -31,17 +38,15 @@ export class MeliNotification {
   @Property()
   recieved!: Date;
 
-  @ManyToOne(() => MeliAccount, { nullable: false })
-  account!: Rel<MeliAccount>;
-
   constructor(
     meliId: string,
     resource: string,
     topic: string,
-    userId: number,
+    userId: Reference<MeliAccount>,
     applicationId: number,
     sent: Date,
-    recieved: Date
+    recieved: Date,
+    attempts: number
   ) {
     this.meliId = meliId;
     this.resource = resource;
@@ -50,5 +55,6 @@ export class MeliNotification {
     this.applicationId = applicationId;
     this.sent = sent;
     this.recieved = recieved;
+    this.attempts = attempts;
   }
 }

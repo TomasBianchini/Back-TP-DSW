@@ -20,7 +20,8 @@ async function add(req: Request, res: Response, next: NextFunction) {
     req.body.user_id,
     req.body.application_id,
     req.body.sent,
-    req.body.recieved
+    new Date(),
+    req.body.attempts
   );
   const newNotification = em.create(MeliNotification, newMeliNotification);
   await em.flush();
