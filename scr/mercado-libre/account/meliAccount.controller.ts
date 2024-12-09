@@ -3,6 +3,7 @@ import { orm } from '../../shared/db/orm.js';
 import { MeliAccount } from './meliAccount.entity.js';
 import { meliAccountService } from './meliAccount.service.js';
 import { BadRequestError } from '../../shared/utils/errors.js';
+import { ObjectId } from '@mikro-orm/mongodb';
 
 const em = orm.em;
 
@@ -19,8 +20,8 @@ async function add(req: Request, res: Response, next: NextFunction) {
     const meliAccount = await meliAccountService.oauth(req.body.code);
     meliAccount.seller = sellerId;
     meliAccount.state = 'active';
+    console.log(meliAccount);
     const newMeliAccount: MeliAccount = new MeliAccount(
-      meliAccount.id,
       meliAccount.access_token,
       meliAccount.refresh_token,
       meliAccount.expires_in,
@@ -42,7 +43,9 @@ async function add(req: Request, res: Response, next: NextFunction) {
     }
     const accountCreated = em.create(MeliAccount, newMeliAccount);
     await em.flush();
-    res.status(201).json({ message: 'MeliAccount created', data: meliAccount });
+    res
+      .status(201)
+      .json({ message: 'MeliAccount created', data: accountCreated });
   } catch (err: any) {
     next(err);
   }
@@ -51,11 +54,11 @@ async function add(req: Request, res: Response, next: NextFunction) {
 async function get(req: Request, res: Response, next: NextFunction) {
   try {
     const sellerId = res.locals.user;
-    const meliId = req.params.id;
+    const id = new ObjectId(req.params.id);
     const meliAccount: MeliAccount = await em.findOneOrFail(
       MeliAccount,
       {
-        id: meliId,
+        _id: id,
         seller: sellerId,
       },
       { populate: ['seller'] }
@@ -69,9 +72,9 @@ async function get(req: Request, res: Response, next: NextFunction) {
 async function update(req: Request, res: Response, next: NextFunction) {
   try {
     const sellerId = res.locals.user;
-    const meliId = req.params.id;
+    const id = new ObjectId(req.params.id);
     const meliAccount: MeliAccount = await em.findOneOrFail(MeliAccount, {
-      id: meliId,
+      _id: id,
       seller: sellerId,
     });
     if (meliAccount.isActive()) {
@@ -100,9 +103,9 @@ async function update(req: Request, res: Response, next: NextFunction) {
 async function remove(req: Request, res: Response, next: NextFunction) {
   try {
     const sellerId = res.locals.user;
-    const meliId = req.params.id;
+    const id = new ObjectId(req.params.id);
     const meliAccount: MeliAccount = await em.findOneOrFail(MeliAccount, {
-      id: meliId,
+      _id: id,
       seller: sellerId,
     });
     if (meliAccount.isInactive()) {

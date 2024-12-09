@@ -16,9 +16,6 @@ export class MeliAccount {
   @PrimaryKey()
   _id?: ObjectId = new ObjectId();
 
-  @Property({ nullable: false, unique: true })
-  id!: string;
-
   @Property({ nullable: false })
   accessToken!: string;
 
@@ -37,7 +34,7 @@ export class MeliAccount {
   @Property({ nullable: false })
   scope!: string;
 
-  @Property({ nullable: false })
+  @Property({ nullable: false, unique: true })
   userId!: number;
 
   @Property({ nullable: false })
@@ -59,7 +56,6 @@ export class MeliAccount {
   updatedAt? = new Date();
 
   constructor(
-    id: string,
     accessToken: string,
     refreshToken: string,
     expiresIn: number,
@@ -70,7 +66,6 @@ export class MeliAccount {
     state: 'active' | 'inactive',
     seller: Reference<Seller>
   ) {
-    this.id = id;
     this.accessToken = accessToken;
     this.refreshToken = refreshToken;
     this.expiresIn = expiresIn;
