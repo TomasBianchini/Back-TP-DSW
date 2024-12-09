@@ -4,6 +4,7 @@ import { orm, syncSchema } from './shared/db/orm.js';
 import { RequestContext } from '@mikro-orm/core';
 import cors from 'cors';
 import routes from './api.routes.js';
+import webhooksRouter from './webhooks.routes.js';
 //swagger
 import swaggerUi from 'swagger-ui-express';
 import swaggerSetup from './shared/swagger.js';
@@ -22,7 +23,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 //Routes
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSetup));
 app.use('/api', routes);
-app.use('/webhooks', routes);
+app.use('/webhooks', webhooksRouter);
 await syncSchema(); //never in production
 app.use((_, res: Response) => {
   return res.status(404).send({ message: 'Resource not found' });
