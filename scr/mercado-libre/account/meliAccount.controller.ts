@@ -38,8 +38,20 @@ async function add(req: Request, res: Response, next: NextFunction) {
     const existingMeliAccountByUserId = await em.findOne(MeliAccount, {
       userId: meliAccount.user_id,
     });
-    if (existingMeliAccountByUserId) {
+    if (existingMeliAccountByUserId && existingMeliAccountByUserId.isActive()) {
       throw new BadRequestError('MeliAccount already exists');
+    } else if (
+      existingMeliAccountByUserId &&
+      existingMeliAccountByUserId.isInactive()
+    ) {
+      em.assign(existingMeliAccountByUserId, newMeliAccount);
+      await em.flush();
+      res
+        .status(201)
+        .json({
+          message: 'MeliAccount created',
+          data: existingMeliAccountByUserId,
+        });
     }
     const accountCreated = em.create(MeliAccount, newMeliAccount);
     await em.flush();
