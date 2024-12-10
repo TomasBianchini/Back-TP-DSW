@@ -23,8 +23,8 @@ export class MeliNotification {
   @Property()
   topic!: string;
 
-  @ManyToOne(() => MeliAccount, { fieldName: 'userId' })
-  userId!: Reference<MeliAccount>;
+  @Property()
+  userId!: number;
 
   @Property()
   applicationId!: number;
@@ -42,7 +42,7 @@ export class MeliNotification {
     meliId: string,
     resource: string,
     topic: string,
-    userId: Reference<MeliAccount>,
+    userId: number,
     applicationId: number,
     sent: Date,
     recieved: Date,

@@ -46,12 +46,10 @@ async function add(req: Request, res: Response, next: NextFunction) {
     ) {
       em.assign(existingMeliAccountByUserId, newMeliAccount);
       await em.flush();
-      res
-        .status(201)
-        .json({
-          message: 'MeliAccount created',
-          data: existingMeliAccountByUserId,
-        });
+      res.status(201).json({
+        message: 'MeliAccount created',
+        data: existingMeliAccountByUserId,
+      });
     }
     const accountCreated = em.create(MeliAccount, newMeliAccount);
     await em.flush();
@@ -99,7 +97,7 @@ async function update(req: Request, res: Response, next: NextFunction) {
       expiresIn: newMeliAccount.expires_in,
       tokenType: newMeliAccount.token_type,
       scope: newMeliAccount.scope,
-      userId: newMeliAccount.user_id,
+      userId: new ObjectId(newMeliAccount.user_id),
       nickname: meliAccount.nickname,
       seller: sellerId,
       state: 'active',
