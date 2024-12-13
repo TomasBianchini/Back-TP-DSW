@@ -1,8 +1,7 @@
 import { MeliNotification } from './meliNotification.entity.js';
 import { orm } from '../../shared/db/orm.js';
 import { MeliAccount } from '../account/meliAccount.entity.js';
-import { Filter } from 'mongodb';
-import { FilterQuery } from '@mikro-orm/core';
+import { getStock } from '../product/meliProduct.service.js';
 import axios from 'axios';
 
 const em = orm.em;
@@ -13,16 +12,7 @@ async function processStockNotification(notification: MeliNotification) {
   const userId = notification.userId;
   const meliAccount = await em.findOneOrFail(MeliAccount, { userId: userId });
   meliAccount.decryptToken();
-  getItemStock(notification.resource, meliAccount);
-}
-
-async function getItemStock(resource: string, meliAccount: MeliAccount) {
-  const response = await axios.get(`${endpoint_base}${resource}`, {
-    headers: {
-      Authorization: `Bearer ${meliAccount.accessToken}`,
-    },
-  });
-  console.log(response.data);
+  getStock(notification.resource, meliAccount);
 }
 
 export { processStockNotification };
