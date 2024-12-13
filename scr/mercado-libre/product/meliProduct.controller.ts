@@ -5,13 +5,16 @@ import { Product } from '../../product/product.entity.js';
 import { MeliProduct } from './meliProduct.entity.js';
 import { BadRequestError } from '../../shared/utils/errors.js';
 import { meliProductService } from './meliProduct.service.js';
+import { ObjectId } from '@mikro-orm/mongodb';
 
 const em = orm.em;
 
 async function add(req: Request, res: Response, next: NextFunction) {
   try {
     const sellerId = res.locals.user;
+    const meliAccountId = new ObjectId(req.params.id);
     const meliAccount = await em.findOneOrFail(MeliAccount, {
+      _id: meliAccountId,
       seller: sellerId,
       state: 'active',
     });
@@ -35,8 +38,8 @@ async function add(req: Request, res: Response, next: NextFunction) {
     const response = await meliProductService.getOne(meliAccount, meliId);
     const newMeliProduct = em.create(MeliProduct, {
       meliId: meliId,
-      account: meliAccount,
-      product: product,
+      account: meliAccountId,
+      product: productId,
     });
     await em.persistAndFlush(newMeliProduct);
     res
