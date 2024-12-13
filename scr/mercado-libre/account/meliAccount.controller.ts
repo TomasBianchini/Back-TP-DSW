@@ -123,7 +123,6 @@ async function remove(req: Request, res: Response, next: NextFunction) {
     }
     meliAccount.decryptToken();
     if (meliAccount.isTokenExpired()) {
-      console.log('Token expired, refreshing');
       const { accessToken, refreshToken } =
         await meliAccountService.refreshToken(meliAccount);
       meliAccount.accessToken = accessToken;
