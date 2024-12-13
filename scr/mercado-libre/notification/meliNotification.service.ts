@@ -1,7 +1,7 @@
 import { MeliNotification } from './meliNotification.entity.js';
 import { orm } from '../../shared/db/orm.js';
 import { MeliAccount } from '../account/meliAccount.entity.js';
-import { getStock } from '../product/meliProduct.service.js';
+import { meliProductService } from '../product/meliProduct.service.js';
 import axios from 'axios';
 
 const em = orm.em;
@@ -12,7 +12,10 @@ async function processStockNotification(notification: MeliNotification) {
   const userId = notification.userId;
   const meliAccount = await em.findOneOrFail(MeliAccount, { userId: userId });
   meliAccount.decryptToken();
-  getStock(notification.resource, meliAccount);
+  const stock = await meliProductService.getStock(
+    notification.resource,
+    meliAccount
+  );
 }
 
 export { processStockNotification };
